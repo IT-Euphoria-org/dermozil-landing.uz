@@ -1,0 +1,463 @@
+@import "../../styles/mixins.scss";
+.navbar {
+  @include display();
+  @include paddingD(20px);
+  justify-content: space-between;
+  gap: 20px;
+  // background-color: red;
+
+  &__right {
+    @include display();
+    gap: 15px;
+  }
+
+  &__box {
+    background-color: #ff7070;
+    padding: 13px 20px;
+    border-radius: 50px;
+    @include hover();
+  }
+
+  &__title {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 29px;
+
+    color: #ffffff;
+  }
+
+  &__select {
+    width: 90px;
+    padding: 15px 20px;
+    border: none;
+    outline: none;
+    border-radius: 50px;
+    background-color: #484848;
+  }
+
+  select {
+    -webkit-appearance: none; /* For Chrome, Safari, Opera */
+    -moz-appearance: none; /* For Firefox */
+    appearance: none; /* Standard property */
+  }
+
+  /* For Internet Explorer */
+  select::-ms-expand {
+    display: none;
+  }
+}
+
+@media (max-width: 500px) {
+  .navbar {
+    @include paddingP(20px);
+
+    &__right {
+      flex-wrap: wrap;
+    }
+  }
+}
+.intro {
+  @include display();
+  width: calc(100% - 50px);
+  padding: 10px 0px 0px 0px;
+  border-radius: 50px;
+  border: 1px solid black;
+  background: linear-gradient(180deg, #fde7e2 0%, #ffc3c3 100%);
+  flex-direction: column;
+  background-color: red;
+  gap: 0px;
+
+  &__title {
+    width: 90%;
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 800;
+    font-size: 35.899px;
+    line-height: 44px;
+    text-align: center;
+    text-transform: uppercase;
+    color: #484848;
+
+    text-shadow: 0px 4px 26.1px rgba(255, 255, 255, 0.25);
+  }
+
+  &__title-span {
+    color: #4087ff !important;
+  }
+
+  &__center {
+    @include display();
+    position: relative;
+    top: 7px;
+    align-items: end;
+    gap: 40px;
+    width: 100%;
+
+    & img {
+      margin-top: 100px;
+      max-height: 260px;
+      max-width: 400px;
+      // margin-right: 100px
+      // background-color: red
+    }
+  }
+
+  &__center-imgs {
+    @include display();
+    width: 100%;
+    max-width: 1000px;
+    margin-left: -200px;
+    margin-right: -200px;
+    margin-top: -100px;
+    background: #ffffff;
+    background: radial-gradient(
+      circle,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(252, 10, 10, 0) 33%
+    );
+  }
+
+  &__img1 {
+    position: relative;
+    top: 10px;
+    left: 100px;
+    z-index: 2;
+    width: 300px;
+    height: 370px;
+    max-height: none !important;
+  }
+  &__img2 {
+    position: relative;
+    right: 70px;
+    width: 200px;
+    height: 300px;
+    max-height: none !important;
+  }
+  &__img3 {
+    position: relative;
+    left: -200px;
+    top: 60px;
+    width: 290px;
+    height: 200px;
+    z-index: 4;
+    max-height: none !important;
+    max-width: 200px !important;
+  }
+
+  &__bottom {
+    @include display();
+    padding: 20px;
+    justify-content: start;
+    gap: 40px;
+    position: relative;
+    top: 4px;
+    background-color: #fff1ee;
+    width: calc(100% + 4px);
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+  }
+
+  &__form {
+    @include display();
+    justify-content: end;
+    position: relative;
+    width: 40%;
+    // flex-grow: 1;
+    // background-color: red
+  }
+
+  &__button {
+    @include hover();
+    width: 100%;
+    max-width: 400px;
+    border: none;
+    padding: 20px;
+    border-radius: 15px;
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 29px;
+    box-shadow: 0px 2px 5px 4px #ffd5d5;
+    color: #ffffff;
+    background-color: #ff7070;
+  }
+
+  &__bottom-form-text {
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    background-color: white;
+    padding: 5px 20px;
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 800;
+    font-size: 12.8602px;
+    line-height: 16px;
+    text-align: center;
+    text-transform: uppercase;
+
+    color: #ff7070;
+    border-radius: 50px;
+    transform: rotate(13.31deg);
+  }
+
+  &__bottom-text {
+    max-width: 600px;
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+
+    color: #000000;
+  }
+
+  &__bottom-box {
+    @include display();
+    gap: 20px;
+  }
+}
+
+@media (min-width: 500px) and (max-width: 1100px) {
+  .intro {
+    &__title {
+      font-size: 20px;
+      line-height: normal;
+      padding: 10px 0px;
+    }
+
+    &__center {
+      flex-direction: column;
+      align-items: center;
+      // & img {
+      //   position: static;
+      // }
+    }
+
+    &__center-imgs {
+      position: relative;
+      left: -20%;
+      margin-right: 0px;
+      margin-left: 0px;
+      margin-top: 0px;
+      width: 100%;
+      // background-color: red;
+    }
+
+    &__img {
+      // display: none;
+      position: absolute;
+      bottom: 0px;
+      order: 3;
+      // max-height: 260px !important;
+      // max-width: 450px !important;
+      // background-color: red;
+    }
+
+    &__img-1 {
+      right: 25%;
+    }
+
+    &__img-2 {
+      right: 0%;
+    }
+
+    &__img1 {
+      top: -50px;
+      // margin-right: -100px;
+      width: 200px;
+      height: 200px;
+      left: 80px;
+      // background-color: red;
+    }
+    &__img2 {
+      top: -70px;
+      left: -30px;
+      width: 100px;
+      height: 200px;
+    }
+    &__img3 {
+      top: -40px;
+      left: -100px;
+      // position: static;
+      // margin-left: -60px;
+      width: 100px;
+      height: 100px;
+    }
+
+    &__bottom {
+      flex-direction: column;
+      width: calc(100% + 2px);
+    }
+
+    &__form {
+      width: 100%;
+    }
+
+    &__button {
+      max-width: none;
+    }
+
+    &__bottom-form-text {
+      right: -20px;
+    }
+  }
+}
+
+@media (max-width: 500px) {
+  .intro {
+    width: 95%;
+    &__title {
+      font-size: 15px;
+      line-height: normal;
+      padding: 20px;
+    }
+
+    &__center {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    &__center-imgs {
+      position: relative;
+      left: 0%;
+      width: 100%;
+      margin-right: 0px;
+      margin-left: 0px;
+      margin-top: 0px;
+      // background-color: red;
+    }
+
+    &__img {
+      // display: none;
+      position: absolute;
+      bottom: 0px;
+      order: 3;
+      // max-height: 260px !important;
+      // max-width: 450px !important;
+      // background-color: red;
+    }
+
+    &__img-1 {
+      left: 0%;
+    }
+
+    &__img-2 {
+      right: 0%;
+    }
+
+    &__img1 {
+      top: -50px;
+      // margin-right: -100px;
+      width: 200px;
+      height: 200px;
+      left: 80px;
+      // background-color: red;
+    }
+    &__img2 {
+      top: -70px;
+      left: -30px;
+      width: 100px;
+      height: 200px;
+    }
+    &__img3 {
+      top: -40px;
+      left: -100px;
+      // position: static;
+      // margin-left: -60px;
+      width: 100px;
+      height: 100px;
+    }
+
+    &__bottom {
+      flex-direction: column;
+      width: calc(100% + 2px);
+    }
+
+    &__form {
+      width: 100%;
+    }
+  }
+}
+
+// header.scss ga qo'shing yoki mavjud stillarni moslang
+
+// ==========================================================
+// MODAL STIL
+// ==========================================================
+
+// Modal ochiq bo'lganda body scrollini o'chirish uchun
+.modal-open {
+  overflow: hidden;
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+
+  // Orqa fonni blur qilish
+  backdrop-filter: blur(5px);
+}
+
+.modal-content {
+  background-color: white; // Modal ichki fonini oq qilish
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+  position: relative;
+  max-width: 95%; // Kichik ekranlarda o'lcham
+  max-height: 100vh; // Modal juda baland bo'lsa scroll paydo bo'lishi uchun
+  overflow-y: auto; // Agar kontent sig'masa, scroll qo'shish
+
+  // OrderForm ichidagi kontentni sig'dirish uchun
+  .order-section {
+    margin: 0;
+    box-shadow: none; // Modal ichida yana shadow kerak emas
+    background-color: transparent; // Fonsiz qilish
+    padding: 0;
+  }
+}
+
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 30px;
+  font-weight: 300;
+  color: #333;
+  cursor: pointer;
+  transition: color 0.2s;
+  z-index: 10;
+
+  &:hover {
+    color: #ff5733;
+  }
+}
+
+// Mobil qurilmalar uchun moslashuv
+@media (max-width: 768px) {
+  .modal-content {
+    padding: 10px;
+    width: 100%; // To'liq kenglikni egallashi mumkin
+    border-radius: 0;
+  }
+
+  .modal-close {
+    top: 5px;
+    right: 10px;
+    font-size: 25px;
+  }
+}

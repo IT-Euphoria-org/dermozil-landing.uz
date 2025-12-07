@@ -1,0 +1,28 @@
+@mixin display() {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin paddingD($y) {
+  padding: $y 26px;
+}
+
+@mixin paddingT($y) {
+  padding: $y 20px;
+}
+
+@mixin paddingP($y) {
+  width: 90%;
+  padding: $y 0px;
+}
+
+@mixin hover() {
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:active {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,255 @@
+// orderform.scss
+
+.order-section {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #fcf9f7;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+  height: 430px;
+}
+
+.order-header {
+  text-align: center;
+  margin-bottom: 30px;
+
+  h1 {
+    font-family: "Montserrat", sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    color: #333;
+    line-height: 1.4;
+  }
+}
+
+.order-content {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+// ==========================================================
+// RASMLARNI USTMA-UST QILISH STILI (Desktop)
+// ==========================================================
+
+.products-image {
+  max-width: 30%;
+  position: relative;
+  height: 250px;
+  min-width: 150px;
+
+  img {
+    position: absolute;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+
+  img:nth-child(1) {
+    top: 0;
+    left: 0;
+    transform: rotate(-15deg);
+    z-index: 1;
+  }
+
+  img:nth-child(2) {
+    top: 30px;
+    right: 0;
+    transform: rotate(5deg);
+    z-index: 2;
+  }
+}
+
+.gift-box {
+  max-width: 30%;
+  position: relative;
+  .tag {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #ff5733;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    transform: rotate(10deg);
+  }
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+}
+
+// --- FORM STILARI ---
+.order-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 350px;
+  width: 100%;
+  position: relative;
+
+  label {
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+  }
+
+  .input-group {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    padding: 10px 15px;
+    background-color: white;
+
+    i {
+      margin-right: 10px;
+      font-size: 18px;
+      color: #ff5733;
+    }
+
+    input {
+      border: none;
+      outline: none;
+      flex-grow: 1;
+      font-size: 16px;
+    }
+  }
+
+  .submit-button {
+    background-color: #ff5733;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 25px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  }
+
+  .discount-tag {
+    position: absolute;
+    bottom: -5px;
+    right: 0px;
+    background-color: #ffd700;
+    color: #333;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    transform: rotate(-10deg);
+  }
+}
+
+// --- SNACKBAR/NOTIFICATION STILARI (Bottom Right) ---
+
+.notification-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  width: 100%;
+  max-width: 320px;
+}
+
+.notification {
+  color: white;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+
+  p {
+    margin: 0;
+    font-family: "Montserrat", sans-serif;
+  }
+
+  button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+
+  &--success {
+    background-color: #38c172;
+  }
+
+  &--warning {
+    background-color: #ffc107;
+  }
+
+  &--error {
+    background-color: #e3342f;
+  }
+}
+
+// ==========================================================
+// 📱 RESPONSIVE MODAL UCHUN MOSLASHUV (Mobil / 768px dan kichik)
+// ==========================================================
+
+@media (max-width: 768px) {
+  .order-section {
+    // Modal kengligi kichikroq ekranlarda to'liq bo'lishi mumkin
+    max-width: 100%;
+    padding: 20px 10px;
+    margin: 10px auto;
+  }
+
+  .order-header {
+    h1 {
+      font-size: 20px;
+    }
+  }
+
+  .order-content {
+    // Barcha elementlarni ustun bo'ylab joylashtirish
+    flex-direction: column;
+    gap: 15px;
+
+    // Asosiy kontent blokini markazlash
+    justify-content: center;
+    align-items: center;
+  }
+
+  // ✅ RASMLARNI YASHIRISH
+  .products-image,
+  .gift-box {
+    display: none;
+    // Ularning o'rniga qolgan kontent joylashadi
+  }
+
+  // ✅ FORMANI MARKAZGA JOYLASHTIRISH
+  .order-form {
+    max-width: 100%; // To'liq kenglikni olish
+    width: 90%; // O'rtada bo'shliq qoldirish
+    // Markazlash zarur emas, chunki .order-content allaqachon center
+  }
+
+  .order-form .discount-tag {
+    // Mobil ko'rinishda chegirmani moslash
+    bottom: -15px;
+    right: 15px;
+    transform: none; // Aylantirishni olib tashlash
+    padding: 3px 8px;
+    font-size: 10px;
+  }
+}

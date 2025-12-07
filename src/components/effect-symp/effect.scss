@@ -1,0 +1,76 @@
+
+@import "../../styles/mixins.scss";
+
+.effect {
+  @include display();
+  @include paddingD(20px);
+  flex-direction: column;
+  gap: 30px;
+
+  &__cards {
+    @include display();
+    gap: 50px;
+  }
+
+  &__items {
+    @include display();
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  &__items-box {
+    @include display();
+    align-items: center;
+    background-color: #FFE9E4;
+    border-radius: 40px;
+    height: 245px;
+    width: 245px;
+    max-width: 300px;
+
+    & img {
+      border-radius: 25px;
+    }
+  }
+
+  &__items-box-1{
+    align-items: start;
+  }
+
+  &__items-box-2{
+    align-items: end;
+  }
+
+  &__items-text {
+    width: 265px;
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16.5767px;
+    line-height: 20px;
+    text-align: center;
+
+    color: #000000;
+
+
+  }
+
+}
+
+@media (max-width: 1100px) {
+  .effect {
+    @include paddingP(20px);
+
+    &__cards {
+      flex-wrap: wrap;
+    }
+
+    &__items-box {
+      flex-grow: 1;
+      width: 100%;
+    }
+
+    &__items {
+      flex-grow: 1;
+    }
+  }
+}
