@@ -1,3 +1,4 @@
+
 .order-section {
   max-width: 1000px;
   margin: 40px auto;
@@ -6,6 +7,7 @@
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   position: relative;
+  height: auto;
 }
 
 .order-header {
@@ -28,6 +30,7 @@
   gap: 30px;
   flex-wrap: wrap;
 }
+
 
 .products-image {
   max-width: 30%;
@@ -145,6 +148,7 @@
     transform: rotate(-10deg);
   }
 }
+
 
 .notification-container {
   position: fixed;
