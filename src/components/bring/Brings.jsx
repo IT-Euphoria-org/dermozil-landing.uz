@@ -1,25 +1,22 @@
-// src/components/Brings/Brings.jsx
 "use client";
 
-import React, { useRef, useState } from "react"; // useState va AnimatePresence qo'shildi
+import React, { useRef, useState } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import "./brings.scss";
 import OrderForm from "../form/OrderForm";
-// Modal va OrderForm komponentini import qilish
+
+const VIDEO_URL_BRINGS_LEFT =
+  "https://cdn.shopify.com/videos/c/o/v/6e60b4bc6a804972b4352d901421e8ff.mp4";
 
 const Brings = () => {
-  // ✅ MODAL HOLATI
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Modalni ochish/yopish funksiyalari
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  // Ko'rinishni kuzatish uchun useRef hooki
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.5 });
 
-  // Asosiy konteyner variantlari (staggering uchun)
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -31,7 +28,6 @@ const Brings = () => {
     },
   };
 
-  // Chap (SVG) va O'ng (Matn) bo'limlar uchun umumiy slideIn animatsiyasi
   const slideInVariants = {
     hidden: (direction) => ({
       x: direction === "left" ? -100 : 100,
@@ -48,19 +44,16 @@ const Brings = () => {
     },
   };
 
-  // Sarlavha uchun alohida animatsiya
   const titleVariants = {
     hidden: { y: -50, opacity: 0 },
     visible: { y: 0, opacity: 1, transition: { duration: 0.7, delay: 0.1 } },
   };
 
-  // SVG uchun maxsus animatsiya variantlari (aylanish bilan)
-  const svgVariants = {
-    hidden: { scale: 0.8, opacity: 0, rotate: -45 },
+  const videoLeftVariants = {
+    hidden: { scale: 0.8, opacity: 0 },
     visible: {
       scale: 1,
       opacity: 1,
-      rotate: 0,
       transition: {
         type: "spring",
         stiffness: 120,
@@ -69,12 +62,13 @@ const Brings = () => {
     },
   };
 
+  const videoVariants = {
+    hidden: { y: 50, opacity: 0 },
+    visible: { y: 0, opacity: 1, transition: { duration: 0.6, delay: 0.2 } },
+  };
+
   return (
-    // Modal ochiq bo'lsa, 'modal-open' sinfini qo'shamiz (scrollni o'chirish uchun)
     <div className={`wrapper ${isModalOpen ? "modal-open" : ""}`}>
-      {/* -----------------------------------------------------------
-      // ASOSIY BO'LIM KONTENTI
-      // ----------------------------------------------------------- */}
       <motion.section
         className="what-brings"
         ref={sectionRef}
@@ -87,23 +81,29 @@ const Brings = () => {
         </motion.h2>
 
         <motion.div className="what-brings__bottom">
-          {/* Chap bo'lim - SVG Ikonka */}
-          <motion.div className="what-brings__left" variants={svgVariants}>
-            <svg
-              width="104"
-              height="104"
-              viewBox="0 0 104 104"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+          <motion.div
+            className="what-brings__left"
+            variants={videoLeftVariants}
+          >
+            <video
+              src={VIDEO_URL_BRINGS_LEFT}
+              controls
+              playsInline
+              autoPlay
+              loop
+              muted
+              style={{
+                width: "100%",
+                height: "auto",
+                maxHeight: "350px",
+                objectFit: "cover",
+                borderRadius: "20px",
+              }}
             >
-              <path
-                d="M52 0C23.3275 0 0 23.3275 0 52C0 80.6725 23.3275 104 52 104C80.6725 104 104 80.6725 104 52C104 23.3275 80.6725 0 52 0ZM70.6925 54.325L42.08 71.61C41.6699 71.8557 41.2018 71.9879 40.7237 71.993C40.2456 71.9981 39.7748 71.8759 39.3596 71.639C38.9443 71.4021 38.5995 71.059 38.3606 70.6449C38.1217 70.2308 37.9972 69.7606 38 69.2825V34.7175C37.9972 34.2394 38.1217 33.7692 38.3606 33.3551C38.5995 32.941 38.9443 32.5979 39.3596 32.361C39.7748 32.1241 40.2456 32.0019 40.7237 32.007C41.2018 32.0121 41.6699 32.1443 42.08 32.39L70.6925 49.675C71.0913 49.918 71.421 50.2595 71.6497 50.6666C71.8784 51.0738 71.9985 51.533 71.9985 52C71.9985 52.467 71.8784 52.9262 71.6497 53.3334C71.421 53.7405 71.0913 54.082 70.6925 54.325Z"
-                fill="black"
-              />
-            </svg>
+              Browseringiz video tagini qo'llab-quvvatlamaydi.
+            </video>
           </motion.div>
 
-          {/* O'ng bo'lim - Matn va Tugma */}
           <motion.div
             className="what-brings__right"
             variants={slideInVariants}
@@ -129,7 +129,7 @@ const Brings = () => {
             <div className="intro__form what-brings__form">
               <motion.button
                 className="intro__button"
-                onClick={openModal} // ✅ MODALNI OCHISH
+                onClick={openModal}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 transition={{ type: "spring", stiffness: 400 }}
@@ -142,9 +142,6 @@ const Brings = () => {
         </motion.div>
       </motion.section>
 
-      {/* -----------------------------------------------------------
-      // ✅ MODAL KOMPONENTI (AnimatePresence yordamida)
-      // ----------------------------------------------------------- */}
       <AnimatePresence>
         {isModalOpen && (
           <motion.div
@@ -163,13 +160,10 @@ const Brings = () => {
               transition={{ duration: 0.4 }}
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Yopish tugmasi */}
               <button className="modal-close" onClick={closeModal}>
                 &times;
               </button>
-
-              {/* OrderForm Komponenti */}
-              <OrderForm />
+              <OrderForm onCloseModal={closeModal} />
             </motion.div>
           </motion.div>
         )}

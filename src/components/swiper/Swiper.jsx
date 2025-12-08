@@ -1,4 +1,3 @@
-// src/components/Swiper/Swiper.jsx
 "use client";
 import React, { useRef, useEffect, useState } from "react";
 import {
@@ -7,12 +6,14 @@ import {
   useAnimation,
   useMotionValue,
   AnimatePresence,
-} from "framer-motion"; // AnimatePresence qo'shildi
+} from "framer-motion";
 import "./swiper.scss";
 import OrderForm from "../form/OrderForm";
-// Modal va OrderForm komponentini import qilish
 
-// 1. Asosiy kartalar ma'lumotlari
+const videoUrl =
+  "https://cdn.shopify.com/videos/c/o/v/b39d139978eb498fa1f52be8261cdfbb.mp4";
+
+// ✅ Asl 4 ta kartaning ma'lumotlari
 const initialCardData = [
   {
     id: 1,
@@ -44,16 +45,22 @@ const initialCardData = [
   },
 ];
 
-// 2. Cheksiz aylanish uchun ma'lumotlar ro'yxatini to'liq shakllantiramiz
+// ✅ Jami 12 ta kartani yaratamiz (4 x 3)
 const cardData = [
-  ...initialCardData,
-  ...initialCardData.map((card, index) => ({
+  ...initialCardData.map((card) => ({ ...card, uniqueId: `c-${card.id}-1` })), // 1-to'plam (4 ta)
+  ...initialCardData.map((card) => ({
     ...card,
-    id: card.id + initialCardData.length,
-  })),
+    name: card.name.replace(/\d+ yosh/, "30 yosh"), // Ism yoshini o'zgartirish
+    uniqueId: `c-${card.id}-2`, // Unikal ID
+  })), // 2-to'plam (8 ta)
+  ...initialCardData.map((card) => ({
+    ...card,
+    name: card.name.replace(/\d+ yosh/, "40 yosh"), // Ism yoshini o'zgartirish
+    uniqueId: `c-${card.id}-3`, // Unikal ID
+  })), // 3-to'plam (12 ta)
 ];
+// NOTE: Siz 10 ta dedingiz, lekin cheksiz loop uchun 3 x 4 = 12 ta qoldirdim. Agar xar xil 10 ta kerak bo'lsa, qo'lda yozish talab qilinadi.
 
-// --- Yordamchi Komponentlar (O'zgarishsiz) ---
 const UserRatingSVG = () => (
   <svg
     width="59"
@@ -82,54 +89,37 @@ const BackgroundSVG = () => (
     />
   </svg>
 );
-// --- ASOSIY KOMPONENT ---
 
 const Swiper = () => {
-  // ✅ MODAL HOLATI
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Modalni ochish/yopish funksiyalari
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
   const containerRef = useRef(null);
-  const bottomRef = useRef(null);
   const swiperControls = useAnimation();
   const x = useMotionValue(0);
 
+  // totalScrollWidth endi 3 to'plamning (12 ta kartaning) umumiy kengligini o'z ichiga oladi
   const [totalScrollWidth, setTotalScrollWidth] = useState(0);
 
-  // Animatsiya variantlari
   const titleVariants = {
     hidden: { y: 20, opacity: 0 },
     visible: { y: 0, opacity: 1, transition: { duration: 0.6 } },
   };
 
-  const playButtonVariants = {
-    initial: { scale: 0.8, opacity: 0 },
-    animate: {
-      scale: 1,
-      opacity: 1,
-      transition: {
-        duration: 0.8,
-        type: "spring",
-        stiffness: 100,
-        delay: 0.3,
-      },
-    },
-  };
-
-  // 1. Kartalar o'lchamini hisoblash (Cheksiz aylanish uchun muhim)
   useEffect(() => {
     const calculateWidth = () => {
       if (containerRef.current) {
+        // Asl cardData.length emas, balki cardData.length (12 ta) ishlatilishi kerak.
+        // Lekin avtomatik hisoblash uchun bitta elementning o'lchamidan foydalanish yaxshi.
+
         const cards = Array.from(containerRef.current.children);
         if (cards.length > 0) {
+          // Biz aslida initialCardData.length emas, balki uning replikatsiyalarini ishlatyapmiz.
+          // Cheksiz loop uchun faqat bitta asl to'plamning kengligi kerak.
           const cardCount = initialCardData.length;
-          // CSS dan gap qiymatini olish
-          const style = window.getComputedStyle(
-            containerRef.current.parentElement
-          );
+
           const gapValue =
             parseFloat(
               getComputedStyle(document.documentElement).getPropertyValue(
@@ -137,32 +127,43 @@ const Swiper = () => {
               )
             ) || 40;
 
-          const singleCardWidth = cards[0].offsetWidth;
+          // Ehtiyotkorlik bilan birinchi elementning o'lchamini olamiz
+          const singleCardWidth = cards[0]?.offsetWidth || 300; // Default 300px agar topa olmasa
 
-          // Asl bir qator kartaning umumiy kengligi (aylanish masofasi)
-          const totalWidth = singleCardWidth * cardCount + gapValue * cardCount;
+          // Animatsiya faqat bir to'plam kengligiga aylanadi.
+          const widthOfOneSet =
+            singleCardWidth * cardCount + gapValue * cardCount;
 
-          setTotalScrollWidth(totalWidth);
+          setTotalScrollWidth(widthOfOneSet);
         }
       }
     };
 
     calculateWidth();
+    // Rejalashtirilgan o'zgarishlar kiritilishi uchun keyinroq qayta hisoblaymiz
+    const timeoutId = setTimeout(calculateWidth, 100);
+
     window.addEventListener("resize", calculateWidth);
 
-    return () => window.removeEventListener("resize", calculateWidth);
+    return () => {
+      window.removeEventListener("resize", calculateWidth);
+      clearTimeout(timeoutId);
+    };
   }, []);
 
-  // 2. Avtomatik aylanish animatsiyasi (Loop)
   useEffect(() => {
     if (totalScrollWidth === 0) return;
 
     const startAnimation = async () => {
+      // totalScrollWidth faqat 4 ta kartaning kengligi.
+      // Biz cardData da 12 ta karta bor, shuning uchun faqat 4 ta kartaning kengligicha
+      // siljitsak, bu cheksiz loop effektini beradi.
+
       await swiperControls.start({
-        x: -totalScrollWidth, // Kartalarning bir qatori o'lchami
+        x: -totalScrollWidth,
         transition: {
           x: {
-            duration: 30, // Tezlik
+            duration: 30, // Tezlikni saqlab qoldik
             ease: "linear",
             repeat: Infinity,
             repeatType: "loop",
@@ -179,18 +180,11 @@ const Swiper = () => {
     };
   }, [totalScrollWidth, swiperControls, x]);
 
-  // Scroll InView effektlari
-  const areCardsInView = useInView(containerRef, { once: true, amount: 0.1 });
-  const isBottomInView = useInView(bottomRef, { once: true, amount: 0.5 });
+  // Mobil qurilmalarda yuklanish sekinligini kamaytirish uchun areCardsInView olib tashlandi
+  // va individual karta animatsiyalari o'chirildi.
 
   return (
-    // Modal ochiq bo'lsa, 'modal-open' sinfini qo'shamiz (scrollni o'chirish uchun)
     <section className={`sale contain ${isModalOpen ? "modal-open" : ""}`}>
-      {/* -----------------------------------------------------------
-      // ASOSIY KOMPONENT KONTENTI
-      // ----------------------------------------------------------- */}
-
-      {/* Sarlavha animatsiyasi */}
       <motion.h2
         className="what-brings__title"
         variants={titleVariants}
@@ -202,7 +196,6 @@ const Swiper = () => {
         ega bo‘ling va tirnoqlaringizdagi zamburug‘dan butunlay xalos bo‘ling
       </motion.h2>
 
-      {/* Forma (Birinchi Buyurtma tugmasi) animatsiyasi */}
       <motion.div
         className="intro__form sale__form"
         initial={{ y: 20, opacity: 0 }}
@@ -214,9 +207,9 @@ const Swiper = () => {
         viewport={{ once: true, amount: 0.5 }}
       >
         <motion.button
-          type="button" // Form tagi o'rniga div ishlatilgani uchun type="button" qo'shdik
+          type="button"
           className="intro__button"
-          onClick={openModal} // ✅ MODALNI OCHISH
+          onClick={openModal}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
@@ -225,7 +218,6 @@ const Swiper = () => {
         <p className="intro__bottom-form-text">50% chegirma</p>
       </motion.div>
 
-      {/* Framer Motion SWIPER Konteyneri */}
       <div className="sale__swiper-wrapper">
         <motion.div
           className="sale__cards"
@@ -234,17 +226,16 @@ const Swiper = () => {
           style={{ x }}
           initial={{ x: 0, opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          viewport={{ once: true, amount: 0.1 }}
+          viewport={{ once: false, amount: 0.05 }}
         >
           {cardData.map((card, index) => (
             <motion.div
-              key={card.id}
+              // ✅ uniqueId ni ishlatish: karta bir xil ma'lumotga ega bo'lsa ham unikal kalit beradi
+              key={card.uniqueId}
               className="sale__items"
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={areCardsInView ? { scale: 1, opacity: 1 } : {}}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              // ✅ Individual initial va animate o'chirildi.
+              // Bu mobil kechikishini kamaytirishi kerak.
             >
-              {/* Card kontenti ... */}
               <div className="sale__top">
                 <div className="sale__top-items">
                   <img src={card.img1} alt={`Sale card ${card.id} bottom`} />
@@ -282,33 +273,35 @@ const Swiper = () => {
         </motion.div>
       </div>
 
-      {/* Pastki qismdagi Play tugmasi animatsiyasi */}
       <motion.div
-        className="sale__bottom"
-        ref={bottomRef}
-        variants={playButtonVariants}
-        initial="initial"
-        animate={isBottomInView ? "animate" : "initial"}
-        onClick={openModal} // ✅ Play tugmasi bosilganda ham MODALNI OCHISH
+        className="sale__video-container"
+        initial={{ y: 50, opacity: 0 }}
+        whileInView={{ y: 0, opacity: 1 }}
+        viewport={{ once: true, amount: 0.3 }}
+        style={{
+          maxWidth: "1500px",
+          margin: "0 auto 40px auto",
+          width: "100%",
+        }}
       >
-        {/* Play Button SVG */}
-        <svg
-          width="138"
-          height="138"
-          viewBox="0 0 138 138"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
+        <video
+          src={videoUrl}
+          controls
+          playsInline
+          autoPlay
+          loop
+          muted
+          style={{
+            width: "100%",
+            maxHeight: "500px",
+            objectFit: "cover",
+            borderRadius: "20px",
+          }}
         >
-          <path
-            d="M69 0C30.9538 0 0 30.9538 0 69C0 107.046 30.9538 138 69 138C107.046 138 138 107.046 138 69C138 30.9538 107.046 0 69 0ZM93.8035 72.0851L55.8369 95.021C55.2927 95.347 54.6716 95.5224 54.0372 95.5292C53.4029 95.5359 52.7781 95.3738 52.2271 95.0595C51.6761 94.7451 51.2186 94.2899 50.9016 93.7404C50.5845 93.1909 50.4194 92.5669 50.4231 91.9326V46.0675C50.4194 45.4331 50.5845 44.8091 50.9016 44.2596C51.2186 43.7101 51.6761 43.2549 52.2271 42.9405C52.7781 42.6262 53.4029 42.4641 54.0372 42.4708C54.6716 42.4776 55.2927 42.653 55.8369 42.979L93.8035 65.9149C94.3327 66.2373 94.7701 66.6905 95.0736 67.2307C95.3771 67.771 95.5365 68.3803 95.5365 69C95.5365 69.6197 95.3771 70.229 95.0736 70.7693C94.7701 71.3096 94.3327 71.7627 93.8035 72.0851Z"
-            fill="black"
-          />
-        </svg>
+          Browseringiz video tagini qo'llab-quvvatlamaydi.
+        </video>
       </motion.div>
 
-      {/* -----------------------------------------------------------
-      // ✅ MODAL KOMPONENTI (AnimatePresence yordamida)
-      // ----------------------------------------------------------- */}
       <AnimatePresence>
         {isModalOpen && (
           <motion.div
@@ -319,7 +312,6 @@ const Swiper = () => {
             transition={{ duration: 0.3 }}
             onClick={closeModal}
           >
-            {/* Modal kontenti konteyneri */}
             <motion.div
               className="modal-content"
               initial={{ y: -50, opacity: 0 }}
@@ -328,13 +320,11 @@ const Swiper = () => {
               transition={{ duration: 0.4 }}
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Yopish tugmasi */}
               <button className="modal-close" onClick={closeModal}>
                 &times;
               </button>
 
-              {/* OrderForm Komponenti */}
-              <OrderForm />
+              <OrderForm onCloseModal={closeModal} />
             </motion.div>
           </motion.div>
         )}

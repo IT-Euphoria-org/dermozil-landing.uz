@@ -29,7 +29,14 @@ html {
 .sale__swiper-wrapper {
   overflow: hidden; // ✅ Bu qismni saqlash kerak, chunki kartalar ichida siljiydi
   width: 100%;
-  padding-top: 200px;
+  padding-top: 150px;
+
+  @media (max-width: 1100px) {
+    padding: 0;
+  }
+  @media (max-width: 500px) {
+    padding: 0;
+  }
 }
 
 .sale__cards {
@@ -100,6 +107,13 @@ html {
 .sale__main {
   position: relative;
   width: 100%;
+
+  // ✅ Yashil kartaning o'zi, uning balandligi va burchaklari mobil uchun o'zgaradi
+  & .sale__bg {
+    position: relative;
+    width: 100%;
+    // Mobil versiyada balandligi va burchaklarini sozlash kerak
+  }
 
   & svg:nth-child(1) {
     position: absolute;
@@ -214,7 +228,7 @@ html {
     }
 
     &__items {
-      min-height: 450px;
+      min-height: 400px; // Balandlikni biroz kamaytirdim
       margin-top: 100px;
     }
 
@@ -239,14 +253,16 @@ html {
       left: 0px !important;
     }
 
-    &__main-box {
+    // ✅ sale__main-box ga background va burchaklarni qo'shish (Endi u yashil rangni ushlab turadi)
+    .sale__main-box {
       flex-direction: column;
       align-items: center;
       text-align: center;
       gap: 15px;
       padding: 15px;
-      min-height: 300px;
+      min-height: 200px; // Balandlikni qisqartirish
       background-color: #b6e0d8;
+      border-radius: 20px; // Burchak berish
 
       & svg {
         width: 40px;
@@ -254,9 +270,15 @@ html {
       }
     }
 
+    // sale__main ichidagi SVG ni yashirish (chunki sale__main-box endi fonni ta'minlaydi)
     .sale__main {
       & svg:nth-child(1) {
         display: none;
+      }
+      // ✅ sale__main ning o'ziga ham burchak berish
+      & .sale__bg {
+        border-radius: 20px;
+        overflow: hidden; // Ichidagi elementlar tashqariga chiqmasligi uchun
       }
     }
 
@@ -314,6 +336,11 @@ html {
         right: -20px !important;
         bottom: -80px !important;
       }
+    }
+
+    // ✅ 500px da ham balandlikni sozlash
+    .sale__main-box {
+      min-height: 180px;
     }
 
     &__bottom {
