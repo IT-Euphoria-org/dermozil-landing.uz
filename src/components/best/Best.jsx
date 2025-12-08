@@ -11,8 +11,8 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      delayChildren: 0.3, // Konteyner kirgandan so'ng 0.3s kechikish
-      staggerChildren: 0.1, // Har bir bola elementi 0.1s kechikish bilan chiqadi
+      delayChildren: 0.3,
+      staggerChildren: 0.1,
     },
   },
 };
@@ -24,7 +24,7 @@ const itemVariants = {
     y: 0,
     opacity: 1,
     transition: {
-      type: "spring", // Silliq harakat uchun 'spring'
+      type: "spring",
       stiffness: 100,
     },
   },
@@ -40,20 +40,29 @@ const leftSideVariants = {
   },
 };
 
+// 4. SVG ichidagi RECT elementlari uchun aylanma variantlar
+const rectRotateVariants = (direction) => ({
+  rotate: direction === "right" ? 360 : -360,
+  transition: {
+    duration: 30,
+    ease: "linear",
+    repeat: Infinity,
+    delay: Math.random() * 5, // Tasodifiy kechikish
+  },
+});
+
 const Best = () => {
   return (
-    // motion.section yordamida butun seksiyaga Scroll Reveal effekti beramiz
     <motion.section
       className="best"
-      initial="hidden" // Boshlang'ich holat
-      whileInView="visible" // Ekranga kirganda boshlash
-      viewport={{ once: true, amount: 0.2 }} // Bir marta animatsiya qilish, 20% ko'ringanda boshlash
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
     >
       <h2 className="what-brings__title">
         Dermozil - Tirnoq zamburug‘iga qarshi eng yaxshi vosita, tarkibida:
       </h2>
       <div className="best__bottom">
-        {/* CHAP QISM (Rasm va SVG) */}
         <motion.div className="best__left" variants={leftSideVariants}>
           <img
             className="best__img"
@@ -61,16 +70,18 @@ const Best = () => {
             alt="Dermozil mahsuloti"
           />
 
-          <svg
+          <motion.svg
             className="best__svg"
             width="446"
             height="571"
             viewBox="0 0 446 571"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            // xmlns:xlink="http://www.w3.org/1999/xlink" <- Ushbu xato beruvchi qator olib tashlandi
+            // SVG'ga global animatsiya o'rnatilmaydi, faqat uning ichidagi <rect> animatsiya qilinadi
           >
-            <rect
+            <motion.rect
+              initial={{ rotate: 0 }}
+              animate={rectRotateVariants("right")}
               opacity="0.14"
               x="446.006"
               y="164.496"
@@ -80,7 +91,9 @@ const Best = () => {
               transform="rotate(164.933 446.006 164.496)"
               fill="#ccc"
             />
-            <rect
+            <motion.rect
+              initial={{ rotate: 0 }}
+              animate={rectRotateVariants("left")}
               opacity="0.14"
               x="-69"
               y="440.505"
@@ -89,7 +102,9 @@ const Best = () => {
               transform="rotate(-7.14688 -69 440.505)"
               fill="#ccc"
             />
-            <rect
+            <motion.rect
+              initial={{ rotate: 0 }}
+              animate={rectRotateVariants("right")}
               opacity="0.14"
               x="96.0648"
               width="144"
@@ -97,7 +112,9 @@ const Best = () => {
               transform="rotate(38.4663 96.0648 0)"
               fill="#ccc"
             />
-            <rect
+            <motion.rect
+              initial={{ rotate: 0 }}
+              animate={rectRotateVariants("left")}
               opacity="0.14"
               x="151.352"
               y="169"
@@ -106,14 +123,18 @@ const Best = () => {
               transform="rotate(51.3253 151.352 169)"
               fill="#ccc"
             />
-            <rect
+            <motion.rect
+              initial={{ rotate: 0 }}
+              animate={rectRotateVariants("right")}
               opacity="0.14"
               width="164"
               height="272"
               transform="matrix(0.108036 -0.994147 -0.994147 -0.108036 366.763 554.217)"
               fill="#ccc"
             />
-            <rect
+            <motion.rect
+              initial={{ rotate: 0 }}
+              animate={rectRotateVariants("left")}
               opacity="0.14"
               x="320.485"
               y="193"
@@ -122,12 +143,10 @@ const Best = () => {
               transform="rotate(41.3459 320.485 193)"
               fill="#ccc"
             />
-          </svg>
+          </motion.svg>
         </motion.div>
 
-        {/* O'NG QISM (Tarkib elementlari) */}
         <motion.div className="best__right" variants={containerVariants}>
-          {/* Har bir item uchun alohida motion.div ishlatiladi */}
           <motion.div className="best__items" variants={itemVariants}>
             <img src="./images/best-imgs-1.png" alt="Triklozan tarkibi" />
             <p className="best__items-text">
