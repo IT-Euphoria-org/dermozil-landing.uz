@@ -28,7 +28,6 @@ const Header = () => {
     visible: { y: 0, opacity: 1, transition: { duration: 0.6 } },
   };
 
-  // Aylanma animatsiya variantlari
   const rotateSvgVariants = {
     animate: {
       rotate: 360,
@@ -84,7 +83,7 @@ const Header = () => {
         <div className="intro__center" ref={bottomRef}>
           <motion.img
             className="intro__img intro__img-1"
-            width="30%"
+            width="80%"
             src="/images/header-left-img.png"
             alt="Chap rasm"
             variants={scrollInVariants}
@@ -94,7 +93,7 @@ const Header = () => {
           <div className="intro__center-imgs">
             <motion.img
               className="intro__img1"
-              src="/images/header-center-1.png"
+              src="/maz-dermozil.svg"
               alt="Markaziy rasm 1"
               variants={scrollInVariants}
               initial="hidden"
@@ -103,7 +102,7 @@ const Header = () => {
             />
             <motion.img
               className="intro__img2"
-              src="/images/header-center-2.png"
+              src="/Dermozil-box.svg"
               alt="Markaziy rasm 2"
               variants={scrollInVariants}
               initial="hidden"
@@ -112,7 +111,7 @@ const Header = () => {
             />
             <motion.img
               className="intro__img3"
-              src="/images/header-center-3.png"
+              src="/prize.dermozil.svg"
               alt="Markaziy rasm 3"
               variants={scrollInVariants}
               initial="hidden"
@@ -122,7 +121,7 @@ const Header = () => {
           </div>
           <motion.img
             className="intro__img intro__img-2"
-            width="30%"
+            width="80%"
             src="/images/header-right.png"
             alt="O'ng rasm"
             variants={scrollInVariants}

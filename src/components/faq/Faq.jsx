@@ -200,7 +200,7 @@ const Faq = () => {
           </motion.div>
         </motion.div>
 
-        <motion.div
+        {/* <motion.div
           className="intro__form often__form"
           variants={itemVariants}
           transition={{ duration: 0.5, delay: 0.3 }}
@@ -218,6 +218,28 @@ const Faq = () => {
             50% chegirma
           </p>
         </motion.div>
+         */}
+         <motion.div
+                className="intro__form "
+                initial={{ y: 20, opacity: 0 }}
+                whileInView={{
+                  y: 0,
+                  opacity: 1,
+                  transition: { duration: 0.6, delay: 0.2 },
+                }}
+                viewport={{ once: true, amount: 0.5 }}
+              >
+                <motion.button
+                  type="button"
+                  className="intro__button"
+                  onClick={openModal}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Buyurtma berish
+                </motion.button>
+                <p className="intro__bottom-form-text">50% chegirma</p>
+              </motion.div>
       </motion.section>
 
       <AnimatePresence>

@@ -4,7 +4,6 @@
   @include paddingD(20px);
   justify-content: space-between;
   gap: 20px;
-  // background-color: red;
 
   &__right {
     @include display();
@@ -43,18 +42,24 @@
     appearance: none; /* Standard property */
   }
 
-  /* For Internet Explorer */
   select::-ms-expand {
     display: none;
   }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 800px) {
   .navbar {
     @include paddingP(20px);
 
     &__right {
       flex-wrap: wrap;
+    }
+
+    &__box {
+      padding: 3px 10px;
+    }
+    &__box p {
+      font-size: 15px !important;
     }
   }
 }
@@ -63,14 +68,13 @@
   width: calc(100% - 50px);
   padding: 10px 0px 0px 0px;
   border-radius: 50px;
-  border: 1px solid black;
   background: linear-gradient(180deg, #fde7e2 0%, #ffc3c3 100%);
   flex-direction: column;
   background-color: red;
   gap: 0px;
 
   &__title {
-    width: 90%;
+    width: 55%;
     font-family: "Montserrat";
     font-style: normal;
     font-weight: 800;
@@ -97,10 +101,8 @@
 
     & img {
       margin-top: 100px;
-      max-height: 260px;
-      max-width: 400px;
-      // margin-right: 100px
-      // background-color: red
+      max-height: 400px;
+      max-width: 800px;
     }
   }
 
@@ -164,8 +166,7 @@
     justify-content: end;
     position: relative;
     width: 40%;
-    // flex-grow: 1;
-    // background-color: red
+    margin-top: 30px
   }
 
   &__button {
@@ -221,7 +222,7 @@
   }
 }
 
-@media (min-width: 500px) and (max-width: 1100px) {
+@media (min-width: 500px) and (max-width: 1200px) {
   .intro {
     &__title {
       font-size: 20px;
@@ -232,46 +233,38 @@
     &__center {
       flex-direction: column;
       align-items: center;
-      // & img {
-      //   position: static;
-      // }
     }
 
     &__center-imgs {
       position: relative;
-      left: -20%;
-      margin-right: 0px;
-      margin-left: 0px;
-      margin-top: 0px;
+      // left: -20%;
+      // margin-right: 0px;
+      // margin-left: 0px;
+      margin-top: -20px;
       width: 100%;
-      // background-color: red;
     }
 
     &__img {
-      // display: none;
       position: absolute;
       bottom: 0px;
       order: 3;
-      // max-height: 260px !important;
-      // max-width: 450px !important;
-      // background-color: red;
     }
 
     &__img-1 {
-      right: 25%;
+      left: 5%;
+      width: 50%;
     }
 
     &__img-2 {
-      right: 0%;
+      right: 5%;
+      width: 50%;
     }
 
     &__img1 {
       top: -50px;
-      // margin-right: -100px;
       width: 200px;
       height: 200px;
       left: 80px;
-      // background-color: red;
     }
     &__img2 {
       top: -70px;
@@ -282,8 +275,6 @@
     &__img3 {
       top: -40px;
       left: -100px;
-      // position: static;
-      // margin-left: -60px;
       width: 100px;
       height: 100px;
     }
@@ -325,20 +316,16 @@
       position: relative;
       left: 0%;
       width: 100%;
-      margin-right: 0px;
-      margin-left: 0px;
-      margin-top: 0px;
-      // background-color: red;
+      // margin-right: 0px;
+      // margin-left: 0px;
+      margin-top: -20px;
     }
 
     &__img {
-      // display: none;
       position: absolute;
       bottom: 0px;
       order: 3;
-      // max-height: 260px !important;
-      // max-width: 450px !important;
-      // background-color: red;
+      width: 60%;
     }
 
     &__img-1 {
@@ -351,11 +338,9 @@
 
     &__img1 {
       top: -50px;
-      // margin-right: -100px;
       width: 200px;
       height: 200px;
       left: 80px;
-      // background-color: red;
     }
     &__img2 {
       top: -70px;
@@ -366,8 +351,6 @@
     &__img3 {
       top: -40px;
       left: -100px;
-      // position: static;
-      // margin-left: -60px;
       width: 100px;
       height: 100px;
     }
@@ -383,13 +366,6 @@
   }
 }
 
-// header.scss ga qo'shing yoki mavjud stillarni moslang
-
-// ==========================================================
-// MODAL STIL
-// ==========================================================
-
-// Modal ochiq bo'lganda body scrollini o'chirish uchun
 .modal-open {
   overflow: hidden;
 }
@@ -406,7 +382,6 @@
   align-items: center;
   z-index: 1000;
 
-  // Orqa fonni blur qilish
   backdrop-filter: blur(5px);
 }
 
@@ -420,7 +395,6 @@
   max-height: 100vh; // Modal juda baland bo'lsa scroll paydo bo'lishi uchun
   overflow-y: auto; // Agar kontent sig'masa, scroll qo'shish
 
-  // OrderForm ichidagi kontentni sig'dirish uchun
   .order-section {
     margin: 0;
     box-shadow: none; // Modal ichida yana shadow kerak emas
@@ -447,7 +421,6 @@
   }
 }
 
-// Mobil qurilmalar uchun moslashuv
 @media (max-width: 768px) {
   .modal-content {
     padding: 10px;

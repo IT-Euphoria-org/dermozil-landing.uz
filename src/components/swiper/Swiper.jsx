@@ -197,7 +197,7 @@ const Swiper = () => {
       </motion.h2>
 
       <motion.div
-        className="intro__form sale__form"
+        className="intro__form "
         initial={{ y: 20, opacity: 0 }}
         whileInView={{
           y: 0,
