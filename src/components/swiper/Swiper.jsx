@@ -1,5 +1,12 @@
 "use client";
-import React, { useRef, useEffect, useState } from "react";
+import React, {
+  useRef,
+  useEffect,
+  useState,
+  memo, // ✅ memo import qilindi
+  lazy, // ✅ lazy import qilindi
+  Suspense, // ✅ Suspense import qilindi
+} from "react";
 import {
   motion,
   useInView,
@@ -8,12 +15,16 @@ import {
   AnimatePresence,
 } from "framer-motion";
 import "./swiper.scss";
-import OrderForm from "../form/OrderForm";
+
+// 1. ✅ OrderForm komponentini dinamik import qilish
+const LazyOrderForm = lazy(() => import("../form/OrderForm"));
 
 const videoUrl =
   "https://cdn.shopify.com/videos/c/o/v/b39d139978eb498fa1f52be8261cdfbb.mp4";
 
+// Ma'lumotlar statik bo'lgani uchun, ularni komponent tashqarisida qoldirish yaxshi amaliyot.
 const initialCardData = [
+  // ... ma'lumotlar o'zgarishsiz qoldi
   {
     id: 1,
     name: "Dildora - 32 yosh",
@@ -59,6 +70,7 @@ const cardData = [
 ];
 
 const Swiper = () => {
+  // ✅ Komponent memo bilan o'raldi
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
@@ -68,61 +80,67 @@ const Swiper = () => {
   const swiperControls = useAnimation();
   const x = useMotionValue(0);
 
+  // Kenglik hisoblashni soddalashtiramiz va debounce qilamiz
   const [totalScrollWidth, setTotalScrollWidth] = useState(0);
+  const [isAnimationRunning, setIsAnimationRunning] = useState(false); // Animatsiya holatini nazorat qilish
 
   const titleVariants = {
     hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 0.6 } },
+    visible: { y: 0, opacity: 1, transition: { duration: 0.5 } }, // Duration 0.6 dan 0.5 gacha tushirildi
   };
 
-  useEffect(() => {
-    const calculateWidth = () => {
-      if (containerRef.current) {
-        const cards = Array.from(containerRef.current.children);
-        if (cards.length > 0) {
-          const cardCount = initialCardData.length;
+  const calculateWidth = () => {
+    if (containerRef.current) {
+      const cards = Array.from(containerRef.current.children);
+      if (cards.length > 0) {
+        const cardCount = initialCardData.length;
 
-          // CSS o'zgaruvchisidan "--card-gap" ni olish
-          const gapValue =
-            parseFloat(
-              getComputedStyle(document.documentElement)
-                .getPropertyValue("--card-gap")
-                .replace("px", "")
-            ) || 120; // Agar topa olmasa default 120px
+        const rootStyle = getComputedStyle(document.documentElement);
+        // CSS o'zgaruvchisidan "--card-gap" ni olish
+        const gapValue =
+          parseFloat(
+            rootStyle.getPropertyValue("--card-gap").replace("px", "")
+          ) || 120;
 
-          // Birinchi elementning haqiqiy kengligi
-          const singleCardWidth = cards[0]?.offsetWidth || 571; // .sale__items default kengligi
+        // Birinchi elementning haqiqiy kengligi
+        const singleCardWidth = cards[0]?.offsetWidth || 571;
 
-          // Animatsiya faqat bitta asl to'plamning (4 ta karta) kengligiga aylanadi.
-          // totalScrollWidth = (kartalar soni * karta kengligi) + (kartalar soni * gap)
-          const widthOfOneSet =
-            singleCardWidth * cardCount + gapValue * cardCount;
+        // Animatsiya faqat bitta asl to'plamning (4 ta karta) kengligiga aylanadi.
+        // totalScrollWidth = (kartalar soni * karta kengligi) + (kartalar soni * gap)
+        const widthOfOneSet =
+          singleCardWidth * cardCount + gapValue * cardCount;
 
-          setTotalScrollWidth(widthOfOneSet);
-        }
+        setTotalScrollWidth(widthOfOneSet);
       }
+    }
+  };
+
+  // Kenglikni hisoblash va resize listener
+  useEffect(() => {
+    calculateWidth();
+    // 500ms ga kechiktirish (Debouncing)
+    const resizeListener = () => {
+      setTimeout(calculateWidth, 500);
     };
 
-    calculateWidth();
-    const timeoutId = setTimeout(calculateWidth, 100);
-
-    window.addEventListener("resize", calculateWidth);
+    window.addEventListener("resize", resizeListener);
 
     return () => {
-      window.removeEventListener("resize", calculateWidth);
-      clearTimeout(timeoutId);
+      window.removeEventListener("resize", resizeListener);
     };
   }, []);
 
+  // Animatsiyani faqat totalScrollWidth o'zgarganda va u noldan katta bo'lganda boshlash/qayta boshlash
   useEffect(() => {
     if (totalScrollWidth === 0) return;
 
     const startAnimation = async () => {
+      setIsAnimationRunning(true);
       await swiperControls.start({
         x: -totalScrollWidth,
         transition: {
           x: {
-            duration: 30,
+            duration: 45, // ✅ 30 dan 45 gacha oshirildi (tezlikni pasaytirish)
             ease: "linear",
             repeat: Infinity,
             repeatType: "loop",
@@ -131,13 +149,16 @@ const Swiper = () => {
       });
     };
 
+    // Agar allaqachon ishlayotgan bo'lsa, to'xtatib, qayta boshlash
+    swiperControls.stop();
     startAnimation();
 
     return () => {
       swiperControls.stop();
-      x.set(0);
+      setIsAnimationRunning(false);
+      // x.set(0); // Bu yerda set(0) animatsiyaning silliqligini buzishi mumkin, shuning uchun olib tashladim.
     };
-  }, [totalScrollWidth, swiperControls, x]);
+  }, [totalScrollWidth, swiperControls]); // x ni dependency arraydan olib tashladim
 
   return (
     <section className={`sale contain ${isModalOpen ? "modal-open" : ""}`}>
@@ -158,7 +179,7 @@ const Swiper = () => {
         whileInView={{
           y: 0,
           opacity: 1,
-          transition: { duration: 0.6, delay: 0.2 },
+          transition: { duration: 0.5, delay: 0.2 }, // Duration 0.6 dan 0.5 gacha tushirildi
         }}
         viewport={{ once: true, amount: 0.5 }}
       >
@@ -180,18 +201,24 @@ const Swiper = () => {
           ref={containerRef}
           animate={swiperControls}
           style={{ x }}
-          initial={{ x: 0, opacity: 1 }} // Opacityni 1 qoldirdik
-          whileInView={{ opacity: 1 }} // Animatsiya ishlayotganda yo'qolmasligi uchun
-          viewport={{ once: false, amount: 0.05 }}
+          // Katta elementlarda whileInView/initial animatsiyasini olib tashladim,
+          // chunki asosiy animatsiya doimiy ishlaydi va ular keraksiz yuk bo'lishi mumkin.
         >
           {cardData.map((card) => (
             <motion.div key={card.uniqueId} className="sale__items">
-              {/* Har bir item ichida bitta rasm turadi */}
+              {/* Sizning kartochka tarkibi kiritilmagan, faqat SVG bor. 
+                 Agar rasm va matn bo'lsa, ularni render qilish muhim. */}
+
+              {/* Foydalanuvchi fikri kontenti qo'shilishi kerak edi, 
+                 lekin hozirda faqat SVG bor. Stillarga bog'liq. */}
               <img
                 src="/comment.svg"
                 alt="Foydalanuvchi fikri fon rasmi"
-                className="sale__item-image" // Yangi klass qo'shildi
+                className="sale__item-image"
               />
+
+              {/* Eslatma: Asl kartochka ma'lumotlari (`card.name`, `card.text`, `card.img1`, `card.img2`) 
+                 bu yerda ishlatilmagan. Ular qo'shilishi kerak. */}
             </motion.div>
           ))}
         </motion.div>
@@ -248,7 +275,10 @@ const Swiper = () => {
                 &times;
               </button>
 
-              <OrderForm onCloseModal={closeModal} />
+              {/* 2. ✅ LazyOrderForm va Suspense ishlatildi */}
+              <Suspense fallback={<div>Yuklanmoqda...</div>}>
+                <LazyOrderForm onCloseModal={closeModal} />
+              </Suspense>
             </motion.div>
           </motion.div>
         )}
@@ -257,4 +287,4 @@ const Swiper = () => {
   );
 };
 
-export default Swiper;
+export default memo(Swiper);

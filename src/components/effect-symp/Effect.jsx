@@ -1,13 +1,17 @@
 // src/components/Effect/Effect.jsx
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, memo } from "react"; // ✅ memo import qilindi
 import { motion, useInView } from "framer-motion";
-import Image from "next/image"; // Next.js Image komponentini import qildik
+import Image from "next/image";
 import "./effect.scss";
 
+// Komponentni memo bilan o'raymiz
 const Effect = () => {
+  // ✅ memo bilan o'raldi
   const sectionRef = useRef(null);
+  // useInView holati (isInView) prop emas, balki komponent ichidagi holatga bog'liq,
+  // shuning uchun memo bu yerda keraksiz renderlashni oldini olishga yordam beradi.
   const isInView = useInView(sectionRef, { once: true, amount: 0.5 });
 
   // Sarlavha variantlari
@@ -46,6 +50,7 @@ const Effect = () => {
     // 1. Hover: Yuqoriga ko'tarilish va silliq soya
     whileHover: {
       y: -5,
+      // BoxShadow GPU tomonidan optimallashtirilgan bo'lmasa-da, framer-motion yaxshi boshqaradi.
       boxShadow:
         "0 15px 30px rgba(255, 105, 180, 0.4), 0 0 0 2px rgba(255, 105, 180, 0.5)",
       transition: { type: "spring", stiffness: 300, damping: 15 },
@@ -76,22 +81,18 @@ const Effect = () => {
           <motion.div
             className="effect__items"
             variants={itemVariants}
-            style={{ borderRadius: "20px" }} // Border radius 20px
+            style={{ borderRadius: "20px" }}
             {...cardInteractive}
           >
-            {/* effect__items-box rasmni joylashtirish uchun konteyner bo'lsin (position: relative) */}
             <div
               className="effect__items-box effect__items-box-1"
               style={{ position: "relative", height: "150px" }}
             >
-              {" "}
-              {/* TAXMINIY HEIGHT QO'SHILDI */}
-              {/* Image komponenti bilan rasm to'liq egallaydi */}
               <Image
                 src="/images/effect-1.png"
                 alt="Yoqimsiz hid"
-                fill // Ota-elementni to'liq egallaydi
-                style={{ objectFit: "contain" }} // Rasm o'lchamga moslashtiriladi, lekin buzilmaydi
+                fill
+                style={{ objectFit: "contain" }}
                 unoptimized
               />
             </div>
@@ -111,8 +112,6 @@ const Effect = () => {
               className="effect__items-box"
               style={{ position: "relative", height: "150px" }}
             >
-              {" "}
-              {/* TAXMINIY HEIGHT QO'SHILDI */}
               <Image
                 src="/images/effect-2.png"
                 alt="Tirnoq og‘rig‘i va quruqlik"
@@ -137,8 +136,6 @@ const Effect = () => {
               className="effect__items-box effect__items-box-2"
               style={{ position: "relative", height: "150px" }}
             >
-              {" "}
-              {/* TAXMINIY HEIGHT QO'SHILDI */}
               <Image
                 src="/images/effect-3.png"
                 alt="Tirnoq plastinkalarining qorayishi"
@@ -157,4 +154,4 @@ const Effect = () => {
   );
 };
 
-export default Effect;
+export default memo(Effect);

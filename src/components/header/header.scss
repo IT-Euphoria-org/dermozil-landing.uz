@@ -26,11 +26,6 @@
 
     color: #ffffff;
   }
-
-
-
-
- 
 }
 
 @media (max-width: 800px) {
@@ -152,7 +147,7 @@
     justify-content: end;
     position: relative;
     width: 40%;
-    margin-top: 30px
+    margin-top: 30px;
   }
 
   &__button {
@@ -223,9 +218,6 @@
 
     &__center-imgs {
       position: relative;
-      // left: -20%;
-      // margin-right: 0px;
-      // margin-left: 0px;
       margin-top: -0px;
       width: 100%;
     }
@@ -288,9 +280,10 @@
   .intro {
     width: 95%;
     &__title {
-      font-size: 15px;
+      font-size: 20px;
       line-height: normal;
       padding: 20px;
+      width: 100%;
     }
 
     &__center {
@@ -302,15 +295,15 @@
       position: relative;
       left: 0%;
       width: 100%;
-   
+
       margin-top: 0px;
     }
 
     &__img {
       position: absolute;
-      bottom: 0px;
+      bottom: 10px;
       order: 3;
-      width: 60%;
+      width: 50%;
     }
 
     &__img-1 {

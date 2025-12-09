@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { memo } from "react"; // ✅ memo import qilindi
 import { motion } from "framer-motion";
 import "./best.scss";
 
@@ -13,7 +13,7 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      delayChildren: 0.3,
+      delayChildren: 0.2, // 0.3 dan 0.2 gacha qisqartirildi
       staggerChildren: 0.1,
     },
   },
@@ -29,7 +29,8 @@ const itemVariants = {
     opacity: 1,
     transition: {
       type: "spring",
-      stiffness: 100,
+      stiffness: 80, // 100 dan 80 gacha kamaytirildi, tezroq yakunlash uchun
+      damping: 15, // Damping qo'shildi, silliqlikni ta'minlaydi
     },
   },
 };
@@ -42,28 +43,30 @@ const leftSideVariants = {
   visible: {
     x: 0,
     opacity: 1,
-    transition: { duration: 0.8, ease: "easeOut" },
+    transition: { duration: 0.6, ease: "easeOut" }, // 0.8 dan 0.6 gacha qisqartirildi
   },
 };
 
 /**
- * Rasmni cheksiz aylantirish variantlari (avvalgi rectRotateVariants ishlatiladi)
+ * Rasmni cheksiz aylantirish variantlari (Cheksiz aylanishni sekinlashtirish)
  */
 const rotateVariants = (direction) => ({
   rotate: direction === "right" ? 360 : -360,
   transition: {
-    duration: 30,
+    duration: 45, // ✅ 30 dan 45 gacha oshirildi (tezlikni pasaytirish)
     ease: "linear",
     repeat: Infinity,
-    delay: Math.random() * 5,
+    // delay olib tashlandi, chunki u keraksiz va resurs talab qiladi
   },
 });
 
+// ✅ Komponentni memo bilan o'rash
 const Best = () => {
   return (
     <motion.section
       className="best"
       initial="hidden"
+      // whileInView, Framer Motion ning eng samarali usullaridan biri.
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
     >
@@ -79,18 +82,20 @@ const Best = () => {
             alt="Dermozil mahsuloti"
           />
 
-          {/* Yangi rasm tegi aylanma animatsiya bilan almashtirildi */}
           <motion.img
-            className="best__svg" // CSS stillari saqlanadi
+            className="best__svg"
             src="/tree.svg"
             alt="Dekorativ fon rasmi"
             initial={{ rotate: 0 }}
-            animate={rotateVariants("left")} // Masalan, chapga aylanish
+            animate={rotateVariants("left")}
           />
         </motion.div>
 
         {/* O'NG QISM (Tarkib elementlari) */}
         <motion.div className="best__right" variants={containerVariants}>
+          {/* Itemlarni takroriy yozish o'rniga massivdan foydalanish eng yaxshi yo'l, 
+             lekin mavjud format saqlandi. */}
+
           <motion.div className="best__items" variants={itemVariants}>
             <img src="./images/best-imgs-1.png" alt="Triklozan tarkibi" />
             <p className="best__items-text">
@@ -98,6 +103,7 @@ const Best = () => {
               zamburug‘larga qarshi xususiyatlarga ega
             </p>
           </motion.div>
+
           <motion.div className="best__items" variants={itemVariants}>
             <img src="./images/best-imgs-2.png" alt="D-pantenol tarkibi" />
             <p className="best__items-text">
@@ -106,6 +112,7 @@ const Best = () => {
               etadi
             </p>
           </motion.div>
+
           <motion.div className="best__items" variants={itemVariants}>
             <img src="./images/best-imgs-3.png" alt="Mentol tarkibi" />
             <p className="best__items-text">
@@ -113,6 +120,7 @@ const Best = () => {
               tinchlantiruvchi ta’sirga ega
             </p>
           </motion.div>
+
           <motion.div className="best__items" variants={itemVariants}>
             <img
               src="./images/best-imgs-4.png"
@@ -123,6 +131,7 @@ const Best = () => {
               yallig‘lanishga qarshi ta’sirga ega
             </p>
           </motion.div>
+
           <motion.div className="best__items" variants={itemVariants}>
             <img
               src="./images/best-imgs-5.png"
@@ -133,12 +142,14 @@ const Best = () => {
               jarayonini sekinlashtiradi
             </p>
           </motion.div>
+
           <motion.div className="best__items" variants={itemVariants}>
             <img src="./images/best-imgs-6.png" alt="A vitamini tarkibi" />
             <p className="best__items-text">
               **A vitamini**: Quruqlik belgilari paydo bo‘lishining oldini oladi
             </p>
           </motion.div>
+
           <motion.div className="best__items" variants={itemVariants}>
             <img src="./images/best-imgs-7.png" alt="E vitamini tarkibi" />
             <p className="best__items-text">
@@ -152,4 +163,4 @@ const Best = () => {
   );
 };
 
-export default Best;
+export default memo(Best);

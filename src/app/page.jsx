@@ -1,16 +1,54 @@
-import Brings from "@/components/bring/Brings";
-import Header from "@/components/header/Header";
 import React from "react";
+import dynamic from "next/dynamic";
 import "../styles/fonts.css";
-import Effect from "@/components/effect-symp/Effect";
-import Best from "@/components/best/Best";
-import SaleSection from "@/components/swiper/Swiper";
-import Faq from "@/components/faq/Faq";
-import OrderForm from "@/components/form/OrderForm";
-const page = () => {
+
+import Header from "@/components/header/Header";
+
+const Brings = dynamic(() => import("@/components/bring/Brings"), {
+  loading: () => (
+    <div style={{ height: "50vh", textAlign: "center", paddingTop: "100px" }}>
+      Yuklanmoqda...
+    </div>
+  ),
+});
+
+const Effect = dynamic(() => import("@/components/effect-symp/Effect"), {
+  loading: () => (
+    <div style={{ height: "50vh", textAlign: "center", paddingTop: "100px" }}>
+      Yuklanmoqda...
+    </div>
+  ),
+});
+
+const Best = dynamic(() => import("@/components/best/Best"), {
+  loading: () => (
+    <div style={{ height: "50vh", textAlign: "center", paddingTop: "100px" }}>
+      Yuklanmoqda...
+    </div>
+  ),
+});
+
+const SaleSection = dynamic(() => import("@/components/swiper/Swiper"), {
+  loading: () => (
+    <div style={{ height: "50vh", textAlign: "center", paddingTop: "100px" }}>
+      Yuklanmoqda...
+    </div>
+  ),
+});
+
+const Faq = dynamic(() => import("@/components/faq/Faq"), {
+  loading: () => (
+    <div style={{ height: "50vh", textAlign: "center", paddingTop: "100px" }}>
+      Yuklanmoqda...
+    </div>
+  ),
+});
+
+const Page = () => {
   return (
     <div>
       <Header />
+
       <Brings />
       <Effect />
       <Best />
@@ -20,4 +58,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

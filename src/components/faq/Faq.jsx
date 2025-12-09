@@ -1,9 +1,19 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, {
+  useState,
+  useRef,
+  memo, // ✅ memo import qilindi
+  lazy, // ✅ lazy import qilindi
+  Suspense, // ✅ Suspense import qilindi
+} from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import "./faq.scss";
-import OrderForm from "../form/OrderForm";
+// import OrderForm from "../form/OrderForm"; // To'g'ridan-to'g'ri import o'rniga lazy loading ishlatiladi
 
+// 1. ✅ OrderForm komponentini dinamik import qilish
+const LazyOrderForm = lazy(() => import("../form/OrderForm"));
+
+// FAQ ma'lumotlari komponent tashqarisida qoldirildi (Yaxshi amaliyot)
 const faqData = [
   {
     id: 1,
@@ -43,6 +53,7 @@ const faqData = [
   },
 ];
 
+// Animatsiya variantlari (o'zgarishsiz)
 const contentVariants = {
   open: {
     height: "auto",
@@ -190,7 +201,7 @@ const Faq = () => {
               </h2>
               <motion.button
                 className="often__right-button"
-                onClick={openModal} // ✅ MODALNI OCHISH
+                onClick={openModal}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -200,46 +211,27 @@ const Faq = () => {
           </motion.div>
         </motion.div>
 
-        {/* <motion.div
-          className="intro__form often__form"
-          variants={itemVariants}
-          transition={{ duration: 0.5, delay: 0.3 }}
+        <motion.div
+          className="intro__form "
+          initial={{ y: 20, opacity: 0 }}
+          whileInView={{
+            y: 0,
+            opacity: 1,
+            transition: { duration: 0.6, delay: 0.2 },
+          }}
+          viewport={{ once: true, amount: 0.5 }}
         >
           <motion.button
             type="button"
-            className="intro__button often__form-button"
-            onClick={openModal} // ✅ MODALNI OCHISH
+            className="intro__button"
+            onClick={openModal}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             Buyurtma berish
           </motion.button>
-          <p className="intro__bottom-form-text often__form-text">
-            50% chegirma
-          </p>
+          <p className="intro__bottom-form-text">50% chegirma</p>
         </motion.div>
-         */}
-         <motion.div
-                className="intro__form "
-                initial={{ y: 20, opacity: 0 }}
-                whileInView={{
-                  y: 0,
-                  opacity: 1,
-                  transition: { duration: 0.6, delay: 0.2 },
-                }}
-                viewport={{ once: true, amount: 0.5 }}
-              >
-                <motion.button
-                  type="button"
-                  className="intro__button"
-                  onClick={openModal}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Buyurtma berish
-                </motion.button>
-                <p className="intro__bottom-form-text">50% chegirma</p>
-              </motion.div>
       </motion.section>
 
       <AnimatePresence>
@@ -266,7 +258,10 @@ const Faq = () => {
                 &times;
               </button>
 
-              <OrderForm />
+              {/* 2. ✅ LazyOrderForm va Suspense ishlatildi */}
+              <Suspense fallback={<div>Yuklanmoqda...</div>}>
+                <LazyOrderForm onCloseModal={closeModal} />
+              </Suspense>
             </motion.div>
           </motion.div>
         )}
@@ -275,4 +270,5 @@ const Faq = () => {
   );
 };
 
-export default Faq;
+// 3. ✅ Komponentni memo bilan o'rash
+export default memo(Faq);

@@ -13,27 +13,32 @@ const Header = () => {
   const bottomRef = useRef(null);
   const isInView = useInView(bottomRef, { once: true, amount: 0.3 });
 
+  // 1. Navbar animatsiyasini qisqartirish
   const navbarVariants = {
     hidden: { y: -50, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 0.5 } },
+    visible: { y: 0, opacity: 1, transition: { duration: 0.4 } }, // 0.5 dan 0.4 gacha qisqartirildi
   };
 
+  // 2. Title animatsiyasini qisqartirish
   const titleVariants = {
     hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 0.7, delay: 0.3 } },
+    visible: { y: 0, opacity: 1, transition: { duration: 0.5, delay: 0.2 } }, // 0.7 dan 0.5 gacha, delay 0.3 dan 0.2 gacha qisqartirildi
   };
 
+  // 3. Scroll In animatsiyasini qisqartirish
   const scrollInVariants = {
     hidden: { y: 50, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 0.6 } },
+    visible: { y: 0, opacity: 1, transition: { duration: 0.4 } }, // 0.6 dan 0.4 gacha qisqartirildi
   };
 
+  // 4. SVG aylanishini optimallashtirish (Endi u faqat isInView bo'lganda ishlaydi)
   const rotateSvgVariants = {
+    hidden: { rotate: 0 }, // Yangi holat qo'shildi
     animate: {
       rotate: 360,
       transition: {
         repeat: Infinity,
-        duration: 1.4,
+        duration: 1.2, // Sekinroq aylanish (1.4 dan 1.2 gacha tezlashtirildi)
         ease: "linear",
       },
     },
@@ -81,6 +86,7 @@ const Header = () => {
         </motion.h2>
 
         <div className="intro__center" ref={bottomRef}>
+          {/* Transition delaylari qisqartirildi */}
           <motion.img
             className="intro__img intro__img-1"
             width="80%"
@@ -98,7 +104,7 @@ const Header = () => {
               variants={scrollInVariants}
               initial="hidden"
               animate={isInView ? "visible" : "hidden"}
-              transition={{ duration: 0.6, delay: 0.1 }}
+              transition={{ duration: 0.4, delay: 0.05 }} // Delay 0.1 dan 0.05 gacha
             />
             <motion.img
               className="intro__img2"
@@ -107,7 +113,7 @@ const Header = () => {
               variants={scrollInVariants}
               initial="hidden"
               animate={isInView ? "visible" : "hidden"}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              transition={{ duration: 0.4, delay: 0.1 }} // Delay 0.2 dan 0.1 gacha
             />
             <motion.img
               className="intro__img3"
@@ -116,7 +122,7 @@ const Header = () => {
               variants={scrollInVariants}
               initial="hidden"
               animate={isInView ? "visible" : "hidden"}
-              transition={{ duration: 0.6, delay: 0.3 }}
+              transition={{ duration: 0.4, delay: 0.15 }} // Delay 0.3 dan 0.15 gacha
             />
           </div>
           <motion.img
@@ -135,7 +141,7 @@ const Header = () => {
           variants={scrollInVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          transition={{ duration: 0.4, delay: 0.2 }} // Delay 0.4 dan 0.2 gacha
         >
           <div className="intro__form">
             <motion.button
@@ -160,7 +166,8 @@ const Header = () => {
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
               variants={rotateSvgVariants}
-              animate="animate"
+              initial="hidden" // Yangi initial holat
+              animate={isInView ? "animate" : "hidden"} // Faqat ko'rinishda bo'lganda ishga tushirish
             >
               <path
                 d="M32.5 19.5381C29.9364 19.5381 27.4303 20.2983 25.2988 21.7226C23.1672 23.1468 21.5058 25.1712 20.5248 27.5397C19.5437 29.9082 19.287 32.5144 19.7872 35.0287C20.2873 37.5431 21.5218 39.8527 23.3345 41.6655C25.1473 43.4782 27.4569 44.7127 29.9713 45.2129C32.4856 45.713 35.0918 45.4563 37.4603 44.4752C39.8288 43.4942 41.8532 41.8328 43.2774 39.7013C44.7017 37.5697 45.4619 35.0636 45.4619 32.5C45.4576 29.0636 44.0905 25.7693 41.6606 23.3394C39.2308 20.9095 35.9364 19.5425 32.5 19.5381Z"

@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, memo, lazy, Suspense } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import "./brings.scss";
-import OrderForm from "../form/OrderForm";
+
+// 1. ✅ OrderForm komponentini React.lazy orqali dinamik import qilish
+const LazyOrderForm = lazy(() => import("../form/OrderForm"));
 
 const VIDEO_URL_BRINGS_LEFT =
   "https://cdn.shopify.com/videos/c/o/v/6e60b4bc6a804972b4352d901421e8ff.mp4";
@@ -17,6 +19,7 @@ const Brings = () => {
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.5 });
 
+  // Animatsiya variantlari (o'zgarishsiz, chunki ular allaqachon yaxshi optimallashtirilgan)
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -62,10 +65,11 @@ const Brings = () => {
     },
   };
 
-  const videoVariants = {
-    hidden: { y: 50, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 0.6, delay: 0.2 } },
-  };
+  // videoVariants (ishlatilmagan, lekin qoldirildi)
+  // const videoVariants = {
+  //   hidden: { y: 50, opacity: 0 },
+  //   visible: { y: 0, opacity: 1, transition: { duration: 0.6, delay: 0.2 } },
+  // };
 
   return (
     <div className={`wrapper ${isModalOpen ? "modal-open" : ""}`}>
@@ -92,6 +96,7 @@ const Brings = () => {
               autoPlay
               loop
               muted
+              // Videoni qulaylik uchun style obyektida qoldirdim
               style={{
                 width: "100%",
                 height: "auto",
@@ -163,7 +168,10 @@ const Brings = () => {
               <button className="modal-close" onClick={closeModal}>
                 &times;
               </button>
-              <OrderForm onCloseModal={closeModal} />
+              {/* 2. ✅ LazyOrderForm va Suspense ishlatildi */}
+              <Suspense fallback={<div>Yuklanmoqda...</div>}>
+                <LazyOrderForm onCloseModal={closeModal} />
+              </Suspense>
             </motion.div>
           </motion.div>
         )}
@@ -172,4 +180,5 @@ const Brings = () => {
   );
 };
 
-export default Brings;
+// 3. ✅ Komponentni React.memo bilan o'rash
+export default memo(Brings);
