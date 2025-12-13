@@ -65,7 +65,6 @@ const cardData = [
     uniqueId: `c-${card.id}-3`,
   })),
 ];
-
 const mobileSwiperData = [
   {
     id: 1,
@@ -111,75 +110,55 @@ const mobileSwiperData = [
 
 const Swiper = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [mobileCurrentIndex, setMobileCurrentIndex] = useState(0);
+  // ✅ Harakat yo'nalishini saqlash uchun yangi state
+  // 1 = O'ngga siljish (Next), -1 = Chapga siljish (Prev)
+  const [direction, setDirection] = useState(0);
+
+  const totalMobileSlides = mobileSwiperData.length;
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  // ... (Desktop swiper uchun ref, controls, x, calculateWidth, useEffectlar o'zgarishsiz qoladi)
   const containerRef = useRef(null);
   const swiperControls = useAnimation();
   const x = useMotionValue(0);
-
   const [totalScrollWidth, setTotalScrollWidth] = useState(0);
   const [isAnimationRunning, setIsAnimationRunning] = useState(false);
-
-  const [mobileCurrentIndex, setMobileCurrentIndex] = useState(0);
-  const totalMobileSlides = mobileSwiperData.length;
-
-  const handlePrev = () => {
-    setMobileCurrentIndex((prevIndex) =>
-      prevIndex > 0 ? prevIndex - 1 : prevIndex
-    );
-  };
-
-  const handleNext = () => {
-    setMobileCurrentIndex((prevIndex) =>
-      prevIndex < totalMobileSlides - 1 ? prevIndex + 1 : prevIndex
-    );
-  };
-
   const titleVariants = {
     hidden: { y: 20, opacity: 0 },
     visible: { y: 0, opacity: 1, transition: { duration: 0.5 } },
   };
-
   const calculateWidth = () => {
     if (containerRef.current) {
       const cards = Array.from(containerRef.current.children);
       if (cards.length > 0) {
         const cardCount = initialCardData.length;
-
         const rootStyle = getComputedStyle(document.documentElement);
         const gapValue =
           parseFloat(
             rootStyle.getPropertyValue("--card-gap").replace("px", "")
           ) || 120;
-
         const singleCardWidth = cards[0]?.offsetWidth || 571;
-
         const widthOfOneSet =
           singleCardWidth * cardCount + gapValue * (cardCount - 1);
-
         setTotalScrollWidth(widthOfOneSet);
       }
     }
   };
-
   useEffect(() => {
     calculateWidth();
     const resizeListener = () => {
       setTimeout(calculateWidth, 500);
     };
-
     window.addEventListener("resize", resizeListener);
-
     return () => {
       window.removeEventListener("resize", resizeListener);
     };
   }, []);
-
   useEffect(() => {
     if (totalScrollWidth === 0) return;
-
     const startAnimation = async () => {
       setIsAnimationRunning(true);
       await swiperControls.start({
@@ -194,18 +173,56 @@ const Swiper = () => {
         },
       });
     };
-
     swiperControls.stop();
     startAnimation();
-
     return () => {
       swiperControls.stop();
       setIsAnimationRunning(false);
     };
   }, [totalScrollWidth, swiperControls]);
+  // ... (Desktop swiper uchun useEffectlar tugadi)
+
+  const handlePrev = () => {
+    if (mobileCurrentIndex > 0) {
+      setDirection(-1); // Chapga siljish
+      setMobileCurrentIndex(mobileCurrentIndex - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (mobileCurrentIndex < totalMobileSlides - 1) {
+      setDirection(1); // O'ngga siljish
+      setMobileCurrentIndex(mobileCurrentIndex + 1);
+    }
+  };
+
+  // ✅ Animatsiya variantlari
+  const slideVariants = {
+    // Chap tomondan kirib keladi (NEXT ga o'tish)
+    enter: (direction) => ({
+      x: direction > 0 ? "100%" : "-100%", // O'ngdan yoki chapdan kirib keladi
+      opacity: 0,
+      zIndex: 1,
+    }),
+    // Markaziy holat
+    center: {
+      x: "0%",
+      opacity: 1,
+      zIndex: 2,
+      transition: { duration: 0.4, type: "tween" },
+    },
+    // Chap tomonga chiqib ketadi (PREV ga o'tish)
+    exit: (direction) => ({
+      x: direction < 0 ? "100%" : "-100%", // Chapga yoki o'ngga chiqib ketadi
+      opacity: 0,
+      zIndex: 0,
+      transition: { duration: 0.4, type: "tween" },
+    }),
+  };
 
   return (
     <section className={`sale contain ${isModalOpen ? "modal-open" : ""}`}>
+      {/* ... (H2 va Button qismi o'zgarishsiz) ... */}
       <motion.h2
         className="what-brings__title swiper__title"
         variants={titleVariants}
@@ -259,60 +276,60 @@ const Swiper = () => {
           ))}
         </motion.div>
 
+        {/* ******************************************************* */}
+        {/* MOBILE SWIPER QISMI (FRAMER MOTION BILAN YANGILANDI) */}
+        {/* ******************************************************* */}
         <div className="mobile-swiper-container">
           <div className="swiper-wrapper">
-            {mobileSwiperData.map((item, index) => (
-              <AnimatePresence initial={false} key={item.id}>
-                {index === mobileCurrentIndex && (
-                  <motion.div
-                    className="mobile__swiper"
-                    initial={{
-                      opacity: 0,
-                      x:
-                        mobileCurrentIndex > index
-                          ? 100
-                          : mobileCurrentIndex < index
-                          ? -100
-                          : 0,
-                    }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{
-                      opacity: 0,
-                      x:
-                        mobileCurrentIndex > index
-                          ? -100
-                          : mobileCurrentIndex < index
-                          ? 100
-                          : 0,
-                      position: "absolute",
-                    }}
-                    transition={{ type: "tween", duration: 0.4 }}
-                  >
-                    <div className="mobile__wrapper">
-                      <div className="mobile__top">
-                        <img src={item.img3} className="smile" alt="Icon" />
-                        <div>
-                          <img src={item.img1} alt="Rasm 1" />
-                          <img src={item.img2} alt="Rasm 2" />
+            {/* key qiymatini mobileCurrentIndex ga bog'lash, AnimatePresence uni animatsiya qilishini ta'minlaydi */}
+            <AnimatePresence initial={false} custom={direction}>
+              {mobileSwiperData.map(
+                (item, index) =>
+                  index === mobileCurrentIndex && (
+                    <motion.div
+                      key={item.id} // ✅ Faqat mobileCurrentIndex ga teng bo'lgan element render qilinadi
+                      className="mobile__swiper"
+                      custom={direction} // Animatsiya yo'nalishini variantlarga uzatish
+                      variants={slideVariants}
+                      initial="enter" // Yangi karta qayerdan kirib kelishini belgilaydi
+                      animate="center" // Markaziy holat (ko'rinadi)
+                      exit="exit" // Chiqib ketish holati
+                      // position: "absolute" ni qo'shish, element chiqib ketayotganda joyni saqlamasligini ta'minlaydi
+                      style={{
+                        position: "absolute",
+                        left: "50%",
+                        translateX: "-50%",
+                      }}
+                    >
+                      <div className="mobile__wrapper">
+                        <div className="mobile__top">
+                          {/* <img src={item.img3} className="smile" alt="Icon" /> */}
+                          <div>
+                            <img src={item.img1} alt="Rasm 1" />
+                            <img src={item.img2} alt="Rasm 2" />
+                          </div>
+                        </div>
+                        <div className="mobile__middle">
+                          <h2 className="mobile__title">{item.name}</h2>
+                          <p className="mobile__text">{item.text}</p>
+                        </div>
+                        <div className="mobile__bottom">
+                          <img
+                            className="collapse"
+                            src={item.img4}
+                            alt="Katta mahsulot"
+                          />
+                          <img
+                            className="flacon"
+                            src={item.img5}
+                            alt="Flakon"
+                          />
                         </div>
                       </div>
-                      <div className="mobile__middle">
-                        <h2 className="mobile__title">{item.name}</h2>
-                        <p className="mobile__text">{item.text}</p>
-                      </div>
-                      <div className="mobile__bottom">
-                        <img
-                          className="collapse"
-                          src={item.img4}
-                          alt="Katta mahsulot"
-                        />
-                        <img className="flacon" src={item.img5} alt="Flakon" />
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            ))}
+                    </motion.div>
+                  )
+              )}
+            </AnimatePresence>
           </div>
 
           <div className="swiper-navigation">
@@ -346,6 +363,7 @@ const Swiper = () => {
         </div>
       </div>
 
+      {/* ... (Video va Modal qismi o'zgarishsiz) ... */}
       <motion.div
         className="sale__video-container"
         initial={{ y: 50, opacity: 0 }}

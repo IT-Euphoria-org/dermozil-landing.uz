@@ -139,7 +139,6 @@ html {
   height: 350px;
   padding: 20px;
   border-radius: 15px;
-
 }
 
 .mobile__wrapper {
@@ -159,6 +158,13 @@ html {
     position: relative;
     bottom: -10px;
     width: 25%;
+  }
+
+  & div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
   }
 }
 
@@ -246,7 +252,7 @@ html {
   z-index: 10;
 
   .nav-btn {
-    background-color: $primary-color;
+    background-color: #ff7070;
     color: white;
     border: none;
     padding: 10px 15px;
@@ -261,7 +267,7 @@ html {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 
     &:hover {
-      background-color: darken($primary-color, 10%);
+      background-color: #ee7979;
     }
 
     &:disabled {
@@ -283,7 +289,7 @@ html {
       transition: background-color 0.2s;
 
       &.active {
-        background-color: $primary-color;
+        background-color: #ff7070;
       }
     }
   }

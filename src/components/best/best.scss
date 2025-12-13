@@ -79,13 +79,14 @@
 
     &__img {
       width: 100%;
-      // max-height: 200px;
-      max-width: 209px;
+      max-width: 309px;
+      position: absolute;
+      z-index: 222;
     }
 
     &__svg {
-      // max-height:   200px;
       width: 100%;
+      opacity: .3;
     }
   }
 }

@@ -90,7 +90,7 @@ const Header = () => {
           <motion.img
             className="intro__img intro__img-1"
             width="80%"
-            src="/images/header-left-img.png"
+            src="/leftLeg.svg"
             alt="Chap rasm"
             variants={scrollInVariants}
             initial="hidden"
@@ -128,7 +128,7 @@ const Header = () => {
           <motion.img
             className="intro__img intro__img-2"
             width="80%"
-            src="/images/header-right.png"
+            src="/rightLeg.svg"
             alt="O'ng rasm"
             variants={scrollInVariants}
             initial="hidden"

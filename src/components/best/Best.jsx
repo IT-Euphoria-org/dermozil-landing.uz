@@ -91,7 +91,7 @@ const Best = () => {
           <motion.div className="best__items" variants={itemVariants}>
             <img src="./images/best-imgs-1.png" alt="Triklozan tarkibi" />
             <p className="best__items-text">
-              **Triklozan**: Yallig‘lanishga qarshi, antibakterial va
+              Triklozan: Yallig‘lanishga qarshi, antibakterial va
               zamburug‘larga qarshi xususiyatlarga ega
             </p>
           </motion.div>
@@ -99,7 +99,7 @@ const Best = () => {
           <motion.div className="best__items" variants={itemVariants}>
             <img src="./images/best-imgs-2.png" alt="D-pantenol tarkibi" />
             <p className="best__items-text">
-              **D - pantenol**: Tirnoq plastinkasini namlaydi va yumshatadi,
+              D - pantenol: Tirnoq plastinkasini namlaydi va yumshatadi,
               tirnoq atrofidagi terining ta’sirlanishi va quruqligini bartaraf
               etadi
             </p>
@@ -108,7 +108,7 @@ const Best = () => {
           <motion.div className="best__items" variants={itemVariants}>
             <img src="./images/best-imgs-3.png" alt="Mentol tarkibi" />
             <p className="best__items-text">
-              **Mentol**: Oyoqlardagi og‘irlik va charchoq hissini yo‘qotadi,
+              Mentol: Oyoqlardagi og‘irlik va charchoq hissini yo‘qotadi,
               tinchlantiruvchi ta’sirga ega
             </p>
           </motion.div>
@@ -119,7 +119,7 @@ const Best = () => {
               alt="Moychechak ekstrakti tarkibi"
             />
             <p className="best__items-text">
-              **Moychechak ekstrakti**: Teri qon aylanishini yaxshilaydi va
+              Moychechak ekstrakti: Teri qon aylanishini yaxshilaydi va
               yallig‘lanishga qarshi ta’sirga ega
             </p>
           </motion.div>
@@ -130,7 +130,7 @@ const Best = () => {
               alt="Shalfey ekstrakti tarkibi"
             />
             <p className="best__items-text">
-              **Shalfey ekstrakti**: Ter bezlariga ta’sir qiladi, terlash
+              Shalfey ekstrakti: Ter bezlariga ta’sir qiladi, terlash
               jarayonini sekinlashtiradi
             </p>
           </motion.div>
@@ -138,14 +138,14 @@ const Best = () => {
           <motion.div className="best__items" variants={itemVariants}>
             <img src="./images/best-imgs-6.png" alt="A vitamini tarkibi" />
             <p className="best__items-text">
-              **A vitamini**: Quruqlik belgilari paydo bo‘lishining oldini oladi
+              A vitamini: Quruqlik belgilari paydo bo‘lishining oldini oladi
             </p>
           </motion.div>
 
           <motion.div className="best__items" variants={itemVariants}>
             <img src="./images/best-imgs-7.png" alt="E vitamini tarkibi" />
             <p className="best__items-text">
-              **E vitamini**: Terining dag‘allashgan joylarini yumshatadi,
+              E vitamini: Terining dag‘allashgan joylarini yumshatadi,
               tirnoqlarni oziqlantiradi va tiklaydi
             </p>
           </motion.div>
