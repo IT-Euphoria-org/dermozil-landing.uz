@@ -8,12 +8,8 @@ import React, {
 } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import "./faq.scss";
-// import OrderForm from "../form/OrderForm"; // To'g'ridan-to'g'ri import o'rniga lazy loading ishlatiladi
 
-// 1. ✅ OrderForm komponentini dinamik import qilish
 const LazyOrderForm = lazy(() => import("../form/OrderForm"));
-
-// FAQ ma'lumotlari komponent tashqarisida qoldirildi (Yaxshi amaliyot)
 const faqData = [
   {
     id: 1,
@@ -193,6 +189,8 @@ const Faq = () => {
             <img
               src="./images/often-questions-img.png"
               alt="Ayolning oyoqlarini davolash"
+
+              className="woman__images"
             />
             <div className="often__right-box">
               <p className="often__items-text">Savollar va javoblar</p>

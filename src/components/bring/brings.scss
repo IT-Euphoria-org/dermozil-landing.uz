@@ -18,16 +18,12 @@
   &__left {
     @include display();
     position: relative;
-    background-color: #ffe9e4;
-    width: 50%;
+    background-color: transparent;
+    width: 100%;
     height: 366px;
     max-width: 366px;
-    padding: 30px;
-    border-radius: 50px;
 
-    // & svg {
-    //   // position: absolute;
-    // }
+   
   }
 
   &__title {

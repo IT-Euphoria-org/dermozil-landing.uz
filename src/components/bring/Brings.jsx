@@ -65,11 +65,7 @@ const Brings = () => {
     },
   };
 
-  // videoVariants (ishlatilmagan, lekin qoldirildi)
-  // const videoVariants = {
-  //   hidden: { y: 50, opacity: 0 },
-  //   visible: { y: 0, opacity: 1, transition: { duration: 0.6, delay: 0.2 } },
-  // };
+
 
   return (
     <div className={`wrapper ${isModalOpen ? "modal-open" : ""}`}>

@@ -66,6 +66,49 @@ const cardData = [
   })),
 ];
 
+const mobileSwiperData = [
+  {
+    id: 1,
+    name: "Dildora - 32 yosh",
+    text: "Meni anchadan beri bu muammo qiynab kelar edi. Har xil vositalarni qo‘llab ko‘rdim biroq foyda bermadi. Bir tanishim “Dermozil” kremini taklif qildi. Yana bir bor oyoq zamburug‘idan xalos bo‘lishga urinib ko‘dim. Bir haftadan so‘ng tirnoqlarim avvalgi sog‘lom ko‘rinishiga qaytdi. Natijadan juda xursandman. Ushbu mahsulotni tavsiya qilaman.",
+    img1: "/healt.svg",
+    img2: "/worth.svg",
+    img3: "/smile.svg",
+    img4: "/collapse_dermo.svg",
+    img5: "/flacon-dermo.svg",
+  },
+  {
+    id: 2,
+    name: "Sarvar - 28 yosh",
+    text: "Zamburug' sababli yozda ochiq poyabzal kiyishga uyalardim. Bu muammo ko'pdan beri bor edi. Dermozil kremni ishlatganimdan so'ng, atigi 10 kun ichida katta natijani ko'rdim. Oldin qancha dorilarni ishlatdim, foydasi bo'lmagandi. Endi tirnoqlarim toza va sog'lom. Men kabi muammoingiz bo'lsa, albatta sinab ko'ring.",
+    img1: "/healt.svg",
+    img2: "/worth.svg",
+    img3: "/smile.svg",
+    img4: "/collapse_dermo.svg",
+    img5: "/flacon-dermo.svg",
+  },
+  {
+    id: 3,
+    name: "Fotima - 45 yosh",
+    text: "Uzoq yillar davomida kurashdim, har xil usullarni qo'lladim, lekin faqatgina vaqtincha yordam berardi. Dermozil boshqa sinab ko'rgan dorilarimdan mutlaqo farq qildi. Ta'siri tez va doimiy bo'ldi. Nihoyat, oyoqlarim yengillashdi va estetik ko'rinishi yaxshilandi. Doimiy samarasi uchun hammaga tavsiya qilaman.",
+    img1: "/healt.svg",
+    img2: "/worth.svg",
+    img3: "/smile.svg",
+    img4: "/collapse_dermo.svg",
+    img5: "/flacon-dermo.svg",
+  },
+  {
+    id: 4,
+    name: "Jasur - 35 yosh",
+    text: "Sport bilan shug'ullanganim uchun tez-tez bu muammoga duch kelardim. Oyoqlarimda qichishish va tirnoqlarimda o'zgarishlar sezilardi. Bu kremdan foydalanish oson va natijasi darhol seziladi. Avvalgilariga nisbatan ancha samarali ekan. Endi uni profilaktika uchun ham qo'llayman. Juda qoniqarli natija!",
+    img1: "/healt.svg",
+    img2: "/worth.svg",
+    img3: "/smile.svg",
+    img4: "/collapse_dermo.svg",
+    img5: "/flacon-dermo.svg",
+  },
+];
+
 const Swiper = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -79,9 +122,24 @@ const Swiper = () => {
   const [totalScrollWidth, setTotalScrollWidth] = useState(0);
   const [isAnimationRunning, setIsAnimationRunning] = useState(false);
 
+  const [mobileCurrentIndex, setMobileCurrentIndex] = useState(0);
+  const totalMobileSlides = mobileSwiperData.length;
+
+  const handlePrev = () => {
+    setMobileCurrentIndex((prevIndex) =>
+      prevIndex > 0 ? prevIndex - 1 : prevIndex
+    );
+  };
+
+  const handleNext = () => {
+    setMobileCurrentIndex((prevIndex) =>
+      prevIndex < totalMobileSlides - 1 ? prevIndex + 1 : prevIndex
+    );
+  };
+
   const titleVariants = {
     hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 0.5 } }, // Duration 0.6 dan 0.5 gacha tushirildi
+    visible: { y: 0, opacity: 1, transition: { duration: 0.5 } },
   };
 
   const calculateWidth = () => {
@@ -91,29 +149,23 @@ const Swiper = () => {
         const cardCount = initialCardData.length;
 
         const rootStyle = getComputedStyle(document.documentElement);
-        // CSS o'zgaruvchisidan "--card-gap" ni olish
         const gapValue =
           parseFloat(
             rootStyle.getPropertyValue("--card-gap").replace("px", "")
           ) || 120;
 
-        // Birinchi elementning haqiqiy kengligi
         const singleCardWidth = cards[0]?.offsetWidth || 571;
 
-        // Animatsiya faqat bitta asl to'plamning (4 ta karta) kengligiga aylanadi.
-        // totalScrollWidth = (kartalar soni * karta kengligi) + (kartalar soni * gap)
         const widthOfOneSet =
-          singleCardWidth * cardCount + gapValue * cardCount;
+          singleCardWidth * cardCount + gapValue * (cardCount - 1);
 
         setTotalScrollWidth(widthOfOneSet);
       }
     }
   };
 
-  // Kenglikni hisoblash va resize listener
   useEffect(() => {
     calculateWidth();
-    // 500ms ga kechiktirish (Debouncing)
     const resizeListener = () => {
       setTimeout(calculateWidth, 500);
     };
@@ -125,7 +177,6 @@ const Swiper = () => {
     };
   }, []);
 
-  // Animatsiyani faqat totalScrollWidth o'zgarganda va u noldan katta bo'lganda boshlash/qayta boshlash
   useEffect(() => {
     if (totalScrollWidth === 0) return;
 
@@ -135,7 +186,7 @@ const Swiper = () => {
         x: -totalScrollWidth,
         transition: {
           x: {
-            duration: 45, // ✅ 30 dan 45 gacha oshirildi (tezlikni pasaytirish)
+            duration: 45,
             ease: "linear",
             repeat: Infinity,
             repeatType: "loop",
@@ -144,21 +195,19 @@ const Swiper = () => {
       });
     };
 
-    // Agar allaqachon ishlayotgan bo'lsa, to'xtatib, qayta boshlash
     swiperControls.stop();
     startAnimation();
 
     return () => {
       swiperControls.stop();
       setIsAnimationRunning(false);
-      // x.set(0); // Bu yerda set(0) animatsiyaning silliqligini buzishi mumkin, shuning uchun olib tashladim.
     };
-  }, [totalScrollWidth, swiperControls]); // x ni dependency arraydan olib tashladim
+  }, [totalScrollWidth, swiperControls]);
 
   return (
     <section className={`sale contain ${isModalOpen ? "modal-open" : ""}`}>
       <motion.h2
-        className="what-brings__title"
+        className="what-brings__title swiper__title"
         variants={titleVariants}
         initial="hidden"
         whileInView="visible"
@@ -174,7 +223,7 @@ const Swiper = () => {
         whileInView={{
           y: 0,
           opacity: 1,
-          transition: { duration: 0.5, delay: 0.2 }, // Duration 0.6 dan 0.5 gacha tushirildi
+          transition: { duration: 0.5, delay: 0.2 },
         }}
         viewport={{ once: true, amount: 0.5 }}
       >
@@ -187,7 +236,9 @@ const Swiper = () => {
         >
           Buyurtma berish
         </motion.button>
-        <p className="intro__bottom-form-text swiper__form__text">50% chegirma</p>
+        <p className="intro__bottom-form-text swiper__form__text">
+          50% chegirma
+        </p>
       </motion.div>
 
       <div className="sale__swiper-wrapper">
@@ -207,6 +258,92 @@ const Swiper = () => {
             </motion.div>
           ))}
         </motion.div>
+
+        <div className="mobile-swiper-container">
+          <div className="swiper-wrapper">
+            {mobileSwiperData.map((item, index) => (
+              <AnimatePresence initial={false} key={item.id}>
+                {index === mobileCurrentIndex && (
+                  <motion.div
+                    className="mobile__swiper"
+                    initial={{
+                      opacity: 0,
+                      x:
+                        mobileCurrentIndex > index
+                          ? 100
+                          : mobileCurrentIndex < index
+                          ? -100
+                          : 0,
+                    }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{
+                      opacity: 0,
+                      x:
+                        mobileCurrentIndex > index
+                          ? -100
+                          : mobileCurrentIndex < index
+                          ? 100
+                          : 0,
+                      position: "absolute",
+                    }}
+                    transition={{ type: "tween", duration: 0.4 }}
+                  >
+                    <div className="mobile__wrapper">
+                      <div className="mobile__top">
+                        <img src={item.img3} className="smile" alt="Icon" />
+                        <div>
+                          <img src={item.img1} alt="Rasm 1" />
+                          <img src={item.img2} alt="Rasm 2" />
+                        </div>
+                      </div>
+                      <div className="mobile__middle">
+                        <h2 className="mobile__title">{item.name}</h2>
+                        <p className="mobile__text">{item.text}</p>
+                      </div>
+                      <div className="mobile__bottom">
+                        <img
+                          className="collapse"
+                          src={item.img4}
+                          alt="Katta mahsulot"
+                        />
+                        <img className="flacon" src={item.img5} alt="Flakon" />
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            ))}
+          </div>
+
+          <div className="swiper-navigation">
+            <button
+              type="button"
+              className="nav-btn prev-btn"
+              onClick={handlePrev}
+              disabled={mobileCurrentIndex === 0}
+            >
+              &larr;
+            </button>
+            <div className="pagination">
+              {mobileSwiperData.map((_, index) => (
+                <span
+                  key={index}
+                  className={`dot ${
+                    index === mobileCurrentIndex ? "active" : ""
+                  }`}
+                ></span>
+              ))}
+            </div>
+            <button
+              type="button"
+              className="nav-btn next-btn"
+              onClick={handleNext}
+              disabled={mobileCurrentIndex === totalMobileSlides - 1}
+            >
+              &rarr;
+            </button>
+          </div>
+        </div>
       </div>
 
       <motion.div
