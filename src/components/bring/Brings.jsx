@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useRef, useState, memo, lazy, Suspense } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+// Framer Motion faqat Modal uchun qoldirildi, qolgan joydan olib tashlandi
+import { AnimatePresence, motion } from "framer-motion";
 import "./brings.scss";
 
 const LazyOrderForm = lazy(() => import("../form/OrderForm"));
@@ -15,97 +16,41 @@ const Brings = () => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.5 });
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        delay: 0.2,
-        staggerChildren: 0.15,
-      },
-    },
-  };
-
-  const slideInVariants = {
-    hidden: (direction) => ({
-      x: direction === "left" ? -100 : 100,
-      opacity: 0,
-    }),
-    visible: {
-      x: 0,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 70,
-        damping: 15,
-      },
-    },
-  };
-
-  const titleVariants = {
-    hidden: { y: -50, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 0.7, delay: 0.1 } },
-  };
-
-  const videoLeftVariants = {
-    hidden: { scale: 0.8, opacity: 0 },
-    visible: {
-      scale: 1,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 120,
-        delay: 0.4,
-      },
-    },
-  };
-
   return (
+    // Wrapper ichidagi modal-open klassi orqali animatsiyani CSS-da boshqaramiz
     <div className={`wrapper ${isModalOpen ? "modal-open" : ""}`}>
-      <motion.section
-        className="what-brings"
-        ref={sectionRef}
-        initial="hidden"
-        animate={isInView ? "visible" : "hidden"}
-        variants={containerVariants}
-      >
-        <motion.h2 className="what-brings__title" variants={titleVariants}>
+      <section className="what-brings">
+        <h2 className="what-brings__title">
           TIRNOQ ZAMBURUG‘INI NIMA KELTIRIB CHIQARADI?
-        </motion.h2>
+        </h2>
 
-        <motion.div className="what-brings__bottom">
-          <motion.div
-            className="what-brings__left"
-            variants={videoLeftVariants}
-          >
+        <div className="what-brings__bottom">
+          <div className="what-brings__left">
             <video
-              src={VIDEO_URL_BRINGS_LEFT}
+              // 1. ✅ preload="none" - Sayt yuklanganda videoni yuklamaydi (Tezlik uchun)
+              preload="none"
+              // 2. ✅ poster - Video yuklanguncha rasm ko'rsatadi (LCP uchun)
+              poster="/images/video-poster.webp"
               controls
               playsInline
-              autoPlay
-              loop
               muted
-              // Videoni qulaylik uchun style obyektida qoldirdim
+              loop
+              autoPlay
               style={{
                 width: "100%",
                 height: "auto",
                 maxHeight: "350px",
                 objectFit: "cover",
                 borderRadius: "20px",
+                display: "block", // Layout shift oldini oladi
               }}
             >
+              <source src={VIDEO_URL_BRINGS_LEFT} type="video/mp4" />
               Browseringiz video tagini qo'llab-quvvatlamaydi.
             </video>
-          </motion.div>
+          </div>
 
-          <motion.div
-            className="what-brings__right"
-            variants={slideInVariants}
-            custom={"right"}
-          >
+          <div className="what-brings__right">
             <p className="what-brings__text">
               Mikroblar tirnoqlarga tushib, o‘zlari uchun ideal sharoitlarni -
               nam poyabzal, umumiy dush xonalari, basseyn, sport zali yoki
@@ -124,20 +69,18 @@ const Brings = () => {
               yuqtirishga qodir.
             </p>
             <div className="intro__form what-brings__form">
-              <motion.button
+              <button
+                type="button"
                 className="intro__button"
                 onClick={openModal}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ type: "spring", stiffness: 400 }}
               >
                 Buyurtma berish
-              </motion.button>
+              </button>
               <p className="intro__bottom-form-text">50% chegirma</p>
             </div>
-          </motion.div>
-        </motion.div>
-      </motion.section>
+          </div>
+        </div>
+      </section>
 
       <AnimatePresence>
         {isModalOpen && (
@@ -146,22 +89,23 @@ const Brings = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
             onClick={closeModal}
           >
             <motion.div
               className="modal-content"
-              initial={{ y: -50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 50, opacity: 0 }}
-              transition={{ duration: 0.4 }}
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <button className="modal-close" onClick={closeModal}>
+              <button
+                className="modal-close"
+                onClick={closeModal}
+                aria-label="Close modal"
+              >
                 &times;
               </button>
-              {/* 2. ✅ LazyOrderForm va Suspense ishlatildi */}
-              <Suspense fallback={<div>Yuklanmoqda...</div>}>
+              <Suspense fallback={<div className="loader">Yuklanmoqda...</div>}>
                 <LazyOrderForm onCloseModal={closeModal} />
               </Suspense>
             </motion.div>

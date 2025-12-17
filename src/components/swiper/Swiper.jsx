@@ -297,11 +297,13 @@ const Swiper = () => {
                           <div>
                             <motion.img
                               width={"70"}
+                              height={"80"}
                               src={item.img1}
                               alt="Rasm 1"
                             />
                             <motion.img
                               width={"70"}
+                              height={"80"}
                               src={item.img2}
                               alt="Rasm 2"
                             />
