@@ -266,6 +266,7 @@ const Swiper = () => {
                 src={card.img1}
                 alt="Foydalanuvchi fikri fon rasmi"
                 className="sale__item-image"
+                loading="lazy"
               />
             </motion.div>
           ))}
@@ -300,12 +301,14 @@ const Swiper = () => {
                               height={"80"}
                               src={item.img1}
                               alt="Rasm 1"
+                              loading="lazy"
                             />
                             <motion.img
                               width={"70"}
                               height={"80"}
                               src={item.img2}
                               alt="Rasm 2"
+                              loading="lazy"
                             />
                           </div>
                         </div>
@@ -315,12 +318,14 @@ const Swiper = () => {
                         </div>
                         <div className="mobile__bottom">
                           <motion.img
+                            loading="lazy"
                             width={"100"}
                             className="collapse"
                             src={item.img4}
                             alt="Katta mahsulot"
                           />
                           <motion.img
+                            loading="lazy"
                             width={"100"}
                             className="flacon"
                             src={item.img5}

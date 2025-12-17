@@ -189,6 +189,7 @@ const Faq = () => {
               src="/offen.png"
               alt="Ayolning oyoqlarini davolash"
               className="woman__images"
+              loading="lazy"
             />
             <div className="often__right-box">
               <p className="often__items-text">Savollar va javoblar</p>

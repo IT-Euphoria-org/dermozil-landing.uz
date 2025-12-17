@@ -81,6 +81,7 @@ const Effect = () => {
                 fill
                 style={{ objectFit: "contain" }}
                 unoptimized
+                loading="lazy"
               />
             </div>
             <p className="effect__items-text">
@@ -104,6 +105,7 @@ const Effect = () => {
                 fill
                 style={{ objectFit: "contain" }}
                 unoptimized
+                loading="lazy"
               />
             </div>
             <p className="effect__items-text">
@@ -127,6 +129,7 @@ const Effect = () => {
                 fill
                 style={{ objectFit: "contain" }}
                 unoptimized
+                loading="lazy"
               />
             </div>
             <p className="effect__items-text">

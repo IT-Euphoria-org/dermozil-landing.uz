@@ -66,18 +66,24 @@ const Best = () => {
             className="best__img"
             src="/antileft.png"
             alt="Dermozil mahsuloti"
+            loading="lazy"
           />
 
           <motion.img
             className="best__svg"
             src="/tree.png"
             alt="Dekorativ fon rasmi"
+            loading="lazy"
           />
         </motion.div>
 
         <motion.div className="best__right" variants={containerVariants}>
           <motion.div className="best__items" variants={itemVariants}>
-            <motion.img src="/triklozan.png" alt="Triklozan tarkibi" />
+            <motion.img
+              src="/triklozan.png"
+              loading="lazy"
+              alt="Triklozan tarkibi"
+            />
             <p className="best__items-text">
               Triklozan: Yallig‘lanishga qarshi, antibakterial va zamburug‘larga
               qarshi xususiyatlarga ega
@@ -85,7 +91,11 @@ const Best = () => {
           </motion.div>
 
           <motion.div className="best__items" variants={itemVariants}>
-            <motion.img src="/pentenol.png" alt="D-pantenol tarkibi" />
+            <motion.img
+              loading="lazy"
+              src="/pentenol.png"
+              alt="D-pantenol tarkibi"
+            />
             <p className="best__items-text">
               D - pantenol: Tirnoq plastinkasini namlaydi va yumshatadi, tirnoq
               atrofidagi terining ta’sirlanishi va quruqligini bartaraf etadi
@@ -93,7 +103,7 @@ const Best = () => {
           </motion.div>
 
           <motion.div className="best__items" variants={itemVariants}>
-            <motion.img src="/mentol.png" alt="Mentol tarkibi" />
+            <motion.img loading="lazy" src="/mentol.png" alt="Mentol tarkibi" />
             <p className="best__items-text">
               Mentol: Oyoqlardagi og‘irlik va charchoq hissini yo‘qotadi,
               tinchlantiruvchi ta’sirga ega
@@ -102,6 +112,7 @@ const Best = () => {
 
           <motion.div className="best__items" variants={itemVariants}>
             <motion.img
+              loading="lazy"
               src="/moychechak.png"
               alt="Moychechak ekstrakti tarkibi"
             />
@@ -112,7 +123,11 @@ const Best = () => {
           </motion.div>
 
           <motion.div className="best__items" variants={itemVariants}>
-            <motion.img src="/shalfey.png" alt="Shalfey ekstrakti tarkibi" />
+            <motion.img
+              loading="lazy"
+              src="/shalfey.png"
+              alt="Shalfey ekstrakti tarkibi"
+            />
             <p className="best__items-text">
               Shalfey ekstrakti: Ter bezlariga ta’sir qiladi, terlash jarayonini
               sekinlashtiradi
@@ -120,14 +135,22 @@ const Best = () => {
           </motion.div>
 
           <motion.div className="best__items" variants={itemVariants}>
-            <motion.img src="/avitaminol.png" alt="A vitamini tarkibi" />
+            <motion.img
+              loading="lazy"
+              src="/avitaminol.png"
+              alt="A vitamini tarkibi"
+            />
             <p className="best__items-text">
               A vitamini: Quruqlik belgilari paydo bo‘lishining oldini oladi
             </p>
           </motion.div>
 
           <motion.div className="best__items" variants={itemVariants}>
-            <motion.img src="/evitaminol.png" alt="E vitamini tarkibi" />
+            <motion.img
+              loading="lazy"
+              src="/evitaminol.png"
+              alt="E vitamini tarkibi"
+            />
             <p className="best__items-text">
               E vitamini: Terining dag‘allashgan joylarini yumshatadi,
               tirnoqlarni oziqlantiradi va tiklaydi
