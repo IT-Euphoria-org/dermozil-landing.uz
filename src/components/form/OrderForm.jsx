@@ -1,8 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import "./orderform.scss";
 import Confetti from "../confetti/Confetti";
+import { Snackbar } from "../ui/Snackbar";
 
 const UserIcon = () => (
   <svg
@@ -34,125 +35,109 @@ const PhoneIcon = () => (
   </svg>
 );
 
-const notificationVariants = {
-  hidden: { opacity: 0, x: 300, scale: 0.8 },
-  visible: { opacity: 1, x: 0, scale: 1, transition: { duration: 0.5 } },
-  exit: { opacity: 0, x: 300, transition: { duration: 0.3 } },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-};
-
-const Notification = ({ message, type, onClose }) => (
-  <motion.div
-    className={`notification notification--${type}`}
-    initial="hidden"
-    animate="visible"
-    exit="exit"
-    variants={notificationVariants}
-  >
-    <p>{message}</p>
-    <button onClick={onClose}>&times;</button>
-  </motion.div>
-);
-
 const OrderForm = ({ onCloseModal }) => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [notification, setNotification] = useState(null);
 
-  const phoneRegex = /^\+998\s\d{2}\s\d{3}\s\d{2}\s\d{2}$/;
+  // Snackbar holati
+  const [snackbar, setSnackbar] = useState({ isVisible: false, message: "" });
+
+  const showNotice = (msg) => {
+    setSnackbar({ isVisible: true, message: msg });
+  };
+
+  useEffect(() => {
+    if (snackbar.isVisible) {
+      const timer = setTimeout(() => {
+        setSnackbar((prev) => ({ ...prev, isVisible: false }));
+      }, 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [snackbar.isVisible]);
 
   const formatPhoneNumber = (value) => {
-    if (!value) return value;
-    const cleaned = ("" + value).replace(/\D/g, "");
+    if (!value) return "";
+    const cleaned = value.replace(/\D/g, "");
     let formatted = "+998";
 
-    if (cleaned.length < 4) {
-      return formatted;
-    }
-
+    if (cleaned.length < 4) return formatted;
     formatted += " " + cleaned.substring(3, 5);
-
-    if (cleaned.length >= 6) {
-      formatted += " " + cleaned.substring(5, 8);
-    }
-
-    if (cleaned.length >= 9) {
-      formatted += " " + cleaned.substring(8, 10);
-    }
-
-    if (cleaned.length >= 11) {
-      formatted += " " + cleaned.substring(10, 12);
-    }
+    if (cleaned.length >= 6) formatted += " " + cleaned.substring(5, 8);
+    if (cleaned.length >= 9) formatted += " " + cleaned.substring(8, 10);
+    if (cleaned.length >= 11) formatted += " " + cleaned.substring(10, 12);
 
     return formatted;
   };
 
   const handlePhoneChange = (e) => {
-    const rawValue = e.target.value;
-    const cleanedValue = rawValue.replace(/\D/g, "");
-
+    const cleanedValue = e.target.value.replace(/\D/g, "");
     if (cleanedValue.length > 12) return;
-
     setPhone(formatPhoneNumber(cleanedValue));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const digitsOnly = phone.replace(/\D/g, "");
 
     if (!name.trim()) {
-      setNotification({
-        message: "Iltimos, ismingizni kiriting.",
-        type: "error",
-      });
+      showNotice("Iltimos, ismingizni kiriting.");
       return;
     }
 
-    if (!phoneRegex.test(phone)) {
-      setNotification({
-        message:
-          "Telefon raqamini to'liq +998 XX YYY ZZ ZZ formatida kiriting.",
-        type: "warning",
-      });
+    if (digitsOnly.length !== 12) {
+      showNotice("Telefon raqamini to'liq kiriting.");
       return;
     }
 
     setIsLoading(true);
-    setIsSuccess(false);
 
-    // API yuborish simulyatsiyasi
-    setTimeout(() => {
-      setIsLoading(false);
+    const payload = {
+      full_name: name,
+      phone_number: `+${digitsOnly}`,
+      product_name: "Dermozil",
+    };
 
-      setIsSuccess(true);
-      setNotification({
-        message: "Muvaffaqiyatli! Tez orada siz bilan bog'lanamiz.",
-        type: "success",
-      });
-
-      // Formani tozalash
-      setName("");
-      setPhone("");
-
-      setTimeout(() => setNotification(null), 5000);
-
-      setTimeout(() => {
-        setIsSuccess(false);
-        if (onCloseModal) {
-          onCloseModal();
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_DERMOZIL}/leads/`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
         }
-      }, 3000);
-    }, 2000);
+      );
+
+      if (response.ok) {
+        setIsSuccess(true);
+        setName("");
+        setPhone("");
+
+        setTimeout(() => {
+          setIsSuccess(false);
+          if (onCloseModal) onCloseModal();
+        }, 5000);
+      } else {
+        throw new Error("Server error");
+      }
+    } catch (error) {
+      showNotice("Xatolik yuz berdi! Server bilan bog'lanib bo'lmadi.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <>
+      <Snackbar
+        isVisible={snackbar.isVisible}
+        message={snackbar.message}
+        onClose={() => setSnackbar((prev) => ({ ...prev, isVisible: false }))}
+      />
+
       {isSuccess && <Confetti key="confetti" />}
+
       <motion.section
         className="order-section"
         initial={{ opacity: 0, y: 20 }}
@@ -160,36 +145,28 @@ const OrderForm = ({ onCloseModal }) => {
         transition={{ duration: 0.5 }}
       >
         <div className="order-header">
-          <motion.h1
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
+          <h1>
             ARIZA QOLDIRING VA 50% CHEGIRMAGA EGA BO'LING VA TIRNOQLARINGIZDAGI
             ZAMBURUG'DAN BUTUNLAY XALOS BO'LING
-          </motion.h1>
+          </h1>
         </div>
 
         <div className="order-content">
           <div className="products-image">
             <motion.img
               className="order-images"
-              width={"400"}
+              width="400"
               src="/introcrem.png"
-              alt="Dermozil kremlari"
+              alt="Dermozil"
             />
-            <motion.img
-              width={"400"}
-              src="/introcard.png"
-              alt="Dermozil kremlari"
-            />
+            <motion.img width="400" src="/introcard.png" alt="Dermozil card" />
           </div>
 
           <form onSubmit={handleSubmit} className="order-form">
             <label htmlFor="name">Ismingizni kiriting:</label>
             <motion.div className="input-group" whileHover={{ scale: 1.01 }}>
               <i className="icon-user">
-                <UserIcon /> {/* ✅ Yangi Ikonka */}
+                <UserIcon />
               </i>
               <input
                 type="text"
@@ -204,7 +181,7 @@ const OrderForm = ({ onCloseModal }) => {
             <label htmlFor="phone">Telefon raqamingizni kiriting:</label>
             <motion.div className="input-group" whileHover={{ scale: 1.01 }}>
               <i className="icon-phone">
-                <PhoneIcon /> {/* ✅ Yangi Ikonka */}
+                <PhoneIcon />
               </i>
               <input
                 type="tel"
@@ -213,15 +190,10 @@ const OrderForm = ({ onCloseModal }) => {
                 onChange={handlePhoneChange}
                 placeholder="+998 90 123 45 67"
                 required
-                maxLength={17}
               />
             </motion.div>
 
-            <motion.div
-              className="intro__form often__form"
-              variants={itemVariants}
-              transition={{ duration: 0.5, delay: 0.3 }}
-            >
+            <div className="intro__form often__form">
               <motion.button
                 type="submit"
                 className="intro__button often__form-button"
@@ -229,31 +201,20 @@ const OrderForm = ({ onCloseModal }) => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                {isLoading ? "Yuklanmoqda..." : "Buyurtma berish"}
+                {isLoading ? "Yuborilmoqda..." : "Buyurtma berish"}
               </motion.button>
               <p className="intro__bottom-form-text often__form-text">
                 50% chegirma
               </p>
-            </motion.div>
+            </div>
           </form>
 
           <div className="gift-box">
             <div className="tag">SOV'G'A</div>
-            <motion.img width={"200"} src="/introflacon.png" alt="Sovg'a" />
+            <img width="200" src="/introflacon.png" alt="Sovg'a" />
           </div>
         </div>
       </motion.section>
-      <div className="notification-container">
-        <AnimatePresence>
-          {notification && (
-            <Notification
-              message={notification.message}
-              type={notification.type}
-              onClose={() => setNotification(null)}
-            />
-          )}
-        </AnimatePresence>
-      </div>
     </>
   );
 };
